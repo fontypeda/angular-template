@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PrimeNgModule } from '../../primeng.module';
 import { AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ThemeService } from '../../services/theme.service';
 
 interface City {
   name: string;
@@ -10,11 +12,11 @@ interface City {
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [PrimeNgModule, AsyncPipe],
+  imports: [PrimeNgModule, AsyncPipe, FormsModule],
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss']
 })
-export class TestComponent {
+export class TestComponent implements OnInit {
   checked = false;
   selectedValue = 'Option 1';
   darkMode = false;
@@ -38,14 +40,13 @@ export class TestComponent {
 
   constructor(public themeService: ThemeService) {}
 
-  ngOnInit() {
-    // Subscribe to theme changes
-    this.themeService.darkMode$.subscribe(isDark => {
+  ngOnInit(): void {
+    this.themeService.darkMode$.subscribe((isDark: boolean) => {
       this.darkMode = isDark;
     });
   }
 
-  toggleDarkMode() {
+  toggleDarkMode(): void {
     this.themeService.toggleDarkMode();
   }
 }

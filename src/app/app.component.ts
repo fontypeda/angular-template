@@ -3,11 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { PrimeNG } from 'primeng/config';
 import myTheme from './theme.config';
 import { PrimeNgModule } from './primeng.module';
-import { TestComponent } from './components/test/test.component';
 import { ThemeService } from './services/theme.service';
 import { AsyncPipe } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { TestComponent } from './components/test/test.component';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +15,10 @@ import { FooterComponent } from './components/footer/footer.component';
   imports: [
     RouterOutlet,
     PrimeNgModule,
-    TestComponent,
     AsyncPipe,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    TestComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

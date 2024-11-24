@@ -8,7 +8,7 @@ const config: Config = {
     "./src/**/*.css",        // CSS style files
     "./projects/**/*.{html,ts,scss,css}" // Files in other Angular projects
   ],
-  darkMode: ['.dark'], // Match PrimeNG's dark mode selector
+  darkMode: 'class', // Enable class-based dark mode
   theme: {
     extend: {
       colors: {
