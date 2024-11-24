@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PrimeNgModule } from '../../primeng.module';
 import { ThemeService } from '../../services/theme.service';
 import { AsyncPipe } from '@angular/common';
@@ -13,7 +13,8 @@ interface City {
   standalone: true,
   imports: [PrimeNgModule, AsyncPipe],
   template: `
-    <div class="flex justify-end p-4">
+  <!-- These classes will automatically switch in dark mode -->
+    <div class="flex justify-end p-4 bg-theme-bg dark:bg-theme-bg-dark text-theme-text dark:text-theme-text-dark">
       <p-inputSwitch 
         [(ngModel)]="darkMode" 
         (onChange)="toggleDarkMode()"
@@ -22,6 +23,11 @@ interface City {
       <span class="text-sm">{{ (themeService.darkMode$ | async) ? 'Dark' : 'Light' }} Mode</span>
     </div>
     <div class="grid grid-cols-3 gap-4 p-4">
+
+    <!-- For surface colors -->
+    <div class="bg-theme-surface dark:bg-theme-surface-dark">
+      hallo
+    </div>
       <!-- Card 1 -->
       <p-card header="Primary Card" class="col-span-1">
         <div class="bg-primary-100 p-4 rounded-lg mb-4">
@@ -80,7 +86,7 @@ interface City {
   `,
   styles: []
 })
-export class TestComponent {
+export class TestComponent implements OnInit {
   checked = false;
   selectedValue = 'Option 1';
   darkMode = false;
@@ -103,6 +109,13 @@ export class TestComponent {
   ];
 
   constructor(public themeService: ThemeService) {}
+
+  ngOnInit() {
+    // Subscribe to theme changes
+    this.themeService.darkMode$.subscribe(isDark => {
+      this.darkMode = isDark;
+    });
+  }
 
   toggleDarkMode() {
     this.themeService.toggleDarkMode();

@@ -1,2 +1,4 @@
-<app-test></app-test>
-<router-outlet />
+<div [class.dark]="(themeService.darkMode$ | async)" class="min-h-screen">
+  <app-test></app-test>
+  <router-outlet />
+</div>
