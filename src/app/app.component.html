@@ -1,11 +1,8 @@
-<div [class.dark]="(themeService.darkMode$ | async)" class="min-h-screen flex flex-col bg-primary-100 dark:bg-black">
+<div class="min-h-screen flex flex-col" [class.dark]="(themeService.darkMode$ | async)">
   <app-header></app-header>
   
-  <main class="flex-grow">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <app-test></app-test>
-      <router-outlet />
-    </div>
+  <main class="flex-1 bg-theme-bg dark:bg-theme-bg-dark">
+    <router-outlet></router-outlet>
   </main>
 
   <app-footer></app-footer>
