@@ -1,7 +1,7 @@
-<div class="min-h-screen flex flex-col" [class.dark]="(themeService.darkMode$ | async)">
+<div class="min-h-screen flex flex-col " [class.dark]="(themeService.darkMode$ | async)">
   <app-header></app-header>
   
-  <main class="flex-1 bg-theme-bg dark:bg-theme-bg-dark">
+  <main class="flex-1 bg-primary-50 dark:bg-black">
     <router-outlet></router-outlet>
   </main>
 

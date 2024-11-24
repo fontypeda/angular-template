@@ -12,4 +12,21 @@
 
 html {
     font-size: 14px;
+    /* Keyword values */
+font-smooth: auto;
+font-smooth: never;
+font-smooth: always;
+
+/* <length> value */
+font-smooth: 2em;
+
+/* Global values */
+font-smooth: inherit;
+font-smooth: initial;
+font-smooth: revert;
+font-smooth: revert-layer;
+font-smooth: unset;
+-webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+

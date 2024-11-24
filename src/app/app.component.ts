@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PrimeNG } from 'primeng/config';
 import myTheme from './theme.config';
-import { PrimeNgModule } from './primeng.module';
 import { ThemeService } from './services/theme.service';
 import { AsyncPipe } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
@@ -14,7 +13,6 @@ import { TestComponent } from './components/test/test.component';
   standalone: true,
   imports: [
     RouterOutlet,
-    PrimeNgModule,
     AsyncPipe,
     HeaderComponent,
     FooterComponent,
