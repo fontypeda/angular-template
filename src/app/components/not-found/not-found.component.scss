@@ -1,0 +1,8 @@
+// Custom styles for the not-found component
+// Currently using Tailwind classes directly in the template
+// Add any additional custom styles here if needed
+
+:host {
+  display: block;
+  min-height: 100vh;
+}

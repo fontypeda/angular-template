@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PrimeNgModule } from '../../primeng.module';
@@ -26,9 +26,16 @@ type StatusSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'co
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './test.component.html',
-  styleUrls: ['./test.component.scss']
 })
-export class TestComponent implements OnInit {
+export class TestComponent implements OnInit, OnDestroy {
+  selectedCity: City | null = null;
+  selectedDate: Date | null = null;
+  rating: number = 0;
+  checked: boolean = false;
+  sliderValue: number = 50;
+  knobValue: number = 60;
+  activeTabIndex: number = 0;
+
   cities: City[] = [
     { name: 'New York', code: 'NY' },
     { name: 'San Francisco', code: 'SF' },
@@ -49,10 +56,6 @@ export class TestComponent implements OnInit {
     {
       title: 'Dark Mode Support',
       description: 'Seamless dark mode integration with system preferences.'
-    },
-    {
-      title: 'Type Safety',
-      description: 'Built with TypeScript for better development experience.'
     }
   ];
 
@@ -61,24 +64,25 @@ export class TestComponent implements OnInit {
     { id: 2, name: 'Project Beta', status: 'Pending' },
     { id: 3, name: 'Project Gamma', status: 'Completed' },
     { id: 4, name: 'Project Delta', status: 'On Hold' },
-    { id: 5, name: 'Project Epsilon', status: 'Active' },
-    { id: 6, name: 'Project Zeta', status: 'Pending' },
-    { id: 7, name: 'Project Eta', status: 'Completed' }
+    { id: 5, name: 'Project Epsilon', status: 'Active' }
   ];
-
-  selectedCity: City | null = null;
-  selectedDate: Date | null = null;
-  rating: number = 0;
-  checked: boolean = false;
-  sliderValue: number = 50;
-  knobValue: number = 60;
 
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit(): void {
+    // Initialization code if needed
+  }
+
+  ngOnDestroy(): void {
+    // Clean up any subscriptions or resources
+  }
+
+  onTabChange(event: any): void {
+    this.activeTabIndex = event.index;
+  }
 
   getStatusSeverity(status: string): StatusSeverity {
     switch (status) {
@@ -98,31 +102,52 @@ export class TestComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     // Add your filter logic here
+    console.log('Filtering with:', filterValue);
   }
 
   showSuccess() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Operation completed successfully' });
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Operation completed successfully'
+    });
   }
 
   showInfo() {
-    this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Information message' });
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Info',
+      detail: 'Information message'
+    });
   }
 
   showWarn() {
-    this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Warning message' });
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Warning',
+      detail: 'Warning message'
+    });
   }
 
   showError() {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occurred' });
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Error occurred'
+    });
   }
 
   confirmDelete() {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this record?',
-      header: 'Confirm',
+      header: 'Confirm Delete',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record deleted' });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Record deleted'
+        });
       }
     });
   }

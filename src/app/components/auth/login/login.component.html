@@ -1,0 +1,159 @@
+<div class="flex h-screen">
+  <svg class="hidden">
+    <filter id="noise">
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.7"
+        numOctaves="3"
+        stitchTiles="stitch"
+      />
+      <feColorMatrix type="saturate" values="0" />
+      <feBlend mode="multiply" in2="SourceGraphic" />
+    </filter>
+  </svg>
+
+  <div
+    class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24"
+  >
+    <div class="mx-auto w-full max-w-sm lg:w-96">
+      <div>
+        <h2
+          class="mt-8 text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white"
+        >
+          Sign in to your account
+        </h2>
+        <p class="mt-2 text-sm/6 text-gray-500 dark:text-gray-400">
+          Not a member?
+          <a
+            href="#"
+            class="font-semibold text-primary-500 hover:text-primary-400"
+            >Contact us</a
+          >
+        </p>
+      </div>
+
+      <div class="mt-10">
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-8">
+          <div>
+            <label
+              for="email"
+              class="block text-sm font-medium text-gray-900 dark:text-gray-200"
+            >
+              Email
+            </label>
+            <div class="mt-2">
+              <input
+                pInputText
+                id="email"
+                formControlName="email"
+                type="email"
+                required
+                class="w-full"
+                [ngClass]="{
+                  'ng-invalid ng-dirty':
+                    loginForm.get('email')?.invalid &&
+                    loginForm.get('email')?.touched
+                }"
+              />
+              <div
+                *ngIf="
+                  loginForm.get('email')?.invalid &&
+                  loginForm.get('email')?.touched
+                "
+              >
+                <small
+                  class="text-red-500 absolute"
+                  *ngIf="loginForm.get('email')?.errors?.['required']"
+                >
+                  Email is required
+                </small>
+                <small
+                  class="text-red-500 absolute"
+                  *ngIf="loginForm.get('email')?.errors?.['email']"
+                >
+                  Please enter a valid email
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-900 dark:text-gray-200"
+            >
+              Password
+            </label>
+            <div class="mt-2">
+              <p-password
+                id="password"
+                [toggleMask]="true"
+                [feedback]="false"
+                formControlName="password"
+                required
+                fluid="true"
+                class="w-full"
+                [ngClass]="{
+                  'ng-invalid ng-dirty':
+                    loginForm.get('password')?.invalid &&
+                    loginForm.get('password')?.touched
+                }"
+              ></p-password>
+              <div
+                *ngIf="
+                  loginForm.get('password')?.invalid &&
+                  loginForm.get('password')?.touched
+                "
+              >
+                <small class="text-red-500 absolute"
+                  >Password is required</small
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="text-sm">
+              <a
+                href="#"
+                class="font-semibold text-primary-500 hover:text-primary-400"
+              >
+                Forgot password?
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <p-button
+              type="submit"
+              label="Sign In"
+              [disabled]="loginForm.invalid || loading"
+              [loading]="loading"
+              styleClass="w-full"
+            ></p-button>
+          </div>
+
+          <div
+            class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400"
+          >
+            Test Accounts:<br />
+            Admin: admin&#64;example.com / admin123<br />
+            User: user&#64;example.com / user123
+          </div>
+        </form>
+
+        <div
+          *ngIf="errorMessage"
+          class="mt-4 p-4 text-sm text-red-500 bg-red-50 dark:bg-red-900/10 rounded-lg"
+        >
+          {{ errorMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative hidden w-0 flex-1 lg:block overflow-hidden">
+    <div class="absolute inset-0 h-full w-full" [ngStyle]="meshStyle"></div>
+    <div class="absolute inset-0 h-full w-full noise-filter opacity-50"></div>
+  </div>
+</div>

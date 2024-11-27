@@ -1,4 +1,4 @@
-<div class="min-h-screen flex flex-col " [class.dark]="(themeService.darkMode$ | async)">
+<div class="min-h-screen flex flex-col" [class.dark]="(themeService.darkMode$ | async)">
   <app-header></app-header>
   
   <main class="flex-1 bg-primary-50 dark:bg-black">
@@ -6,4 +6,6 @@
   </main>
 
   <app-footer></app-footer>
+
+  <p-toast></p-toast>
 </div>

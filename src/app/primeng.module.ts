@@ -14,6 +14,7 @@ import { CardModule } from 'primeng/card';
 import { CarouselModule } from 'primeng/carousel';
 import { CascadeSelectModule } from 'primeng/cascadeselect';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ChartModule } from 'primeng/chart';
 import { ChipModule } from 'primeng/chip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
@@ -65,7 +66,6 @@ import { SplitterModule } from 'primeng/splitter';
 import { StepsModule } from 'primeng/steps';
 import { TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
-import { TabViewModule } from 'primeng/tabview';
 import { TagModule } from 'primeng/tag';
 import { TerminalModule } from 'primeng/terminal';
 import { TieredMenuModule } from 'primeng/tieredmenu';
@@ -78,6 +78,7 @@ import { TreeModule } from 'primeng/tree';
 import { TreeSelectModule } from 'primeng/treeselect';
 import { TreeTableModule } from 'primeng/treetable';
 import { SortIcon } from 'primeng/table';
+import { TabsModule } from 'primeng/tabs';
 
 // PrimeNG Services
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -100,6 +101,7 @@ const modules = [
   CarouselModule,
   CascadeSelectModule,
   CheckboxModule,
+  ChartModule,
   ChipModule,
   ConfirmDialogModule,
   ConfirmPopupModule,
@@ -151,7 +153,7 @@ const modules = [
   StepsModule,
   TableModule,
   TabMenuModule,
-  TabViewModule,
+  TabsModule,
   TagModule,
   TerminalModule,
   TieredMenuModule,
@@ -167,8 +169,8 @@ const modules = [
 ];
 
 @NgModule({
-  imports: modules,
-  exports: modules,
+  imports: [...modules],
+  exports: [...modules],
   providers: [
     ConfirmationService,
     MessageService

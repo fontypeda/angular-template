@@ -1,0 +1,18 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "es5",
+  "colorize.languages": [
+    "css",
+    "scss",
+    "typescript",
+    "javascript"
+  ],
+  "colorHighlight.markerType": "dot-before",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true
+}

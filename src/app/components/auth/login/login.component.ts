@@ -1,67 +1,84 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PrimeNgModule } from '../../../primeng.module';
 import { AuthService } from '../../../services/auth.service';
+import { MessageService } from 'primeng/api';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { primaryColors, secondaryColors } from '../../../config/colors';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimeNgModule],
-  template: `
-    <div class="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div class="w-full max-w-md">
-        <p-card header="Login" class="shadow-lg">
-          <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
-            <input id="email" type="email" pInputText [(ngModel)]="email" class="w-full" />
-          </div>
-          <div class="mb-6">
-            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-            <p-password id="password" [(ngModel)]="password" [toggleMask]="true" class="w-full"></p-password>
-          </div>
-          <div class="flex justify-between items-center">
-            <p-button label="Login" (onClick)="onLogin()" [loading]="loading"></p-button>
-            <p-button label="Register" styleClass="p-button-secondary" (onClick)="onRegister()"></p-button>
-          </div>
-        </p-card>
-      </div>
-    </div>
-  `
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, PrimeNgModule],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
-  email: string = '';
-  password: string = '';
+export class LoginComponent implements OnInit {
+  loginForm: FormGroup;
   loading: boolean = false;
+  errorMessage: string | null = null;
+  meshStyle: { [key: string]: string } = {};
 
   constructor(
+    private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private messageService: MessageService
+  ) {
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+    });
+
+    this.meshStyle = {
+      backgroundColor: primaryColors[500],
+      backgroundImage: `
+        radial-gradient(at 40% 20%, ${primaryColors[100]} 0px, transparent 50%),
+        radial-gradient(at 80% 0%, ${primaryColors[200]} 0px, transparent 50%),
+        radial-gradient(at 0% 50%, ${primaryColors[50]} 0px, transparent 50%),
+        radial-gradient(at 80% 50%, ${primaryColors[400]} 0px, transparent 50%),
+        radial-gradient(at 0% 100%, ${secondaryColors[200]} 0px, transparent 50%),
+        radial-gradient(at 80% 100%, ${primaryColors[600]} 0px, transparent 50%),
+        radial-gradient(at 0% 0%, ${secondaryColors[300]} 0px, transparent 50%)
+      `
+    };
+  }
+
+  ngOnInit(): void {
+    this.errorMessage = '';
+  }
 
   onLogin(): void {
-    if (!this.email || !this.password) {
+    if (this.loginForm.invalid) {
+      Object.keys(this.loginForm.controls).forEach(key => {
+        const control = this.loginForm.get(key);
+        if (control?.invalid) {
+          control.markAsTouched();
+        }
+      });
       return;
     }
 
     this.loading = true;
-    this.authService.login(this.email, this.password).subscribe({
+    this.errorMessage = '';
+
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email, password).subscribe({
       next: () => {
-        this.router.navigate(['/']);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Login successful!'
+        });
+        setTimeout(() => this.router.navigate(['/']), 1000);
       },
       error: (error) => {
-        console.error('Login failed:', error);
-        this.loading = false;
-      },
-      complete: () => {
+        this.errorMessage = error.message || 'Login failed. Please check your credentials.';
         this.loading = false;
       }
     });
-  }
-
-  onRegister(): void {
-    // TODO: Implement registration logic or navigation
-    this.router.navigate(['/register']);
   }
 }

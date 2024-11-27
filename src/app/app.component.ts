@@ -1,44 +1,38 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { PrimeNG } from 'primeng/config';
+import { MessageService } from 'primeng/api';
 import myTheme from './theme.config';
 import { ThemeService } from './services/theme.service';
-import { AsyncPipe } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { TestComponent } from './components/test/test.component';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet,
-    AsyncPipe,
+    CommonModule,
+    RouterModule,
     HeaderComponent,
     FooterComponent,
-    TestComponent
+    ToastModule,
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'angular-template';
+  themeService = inject(ThemeService);
+  messageService = inject(MessageService);
 
-  constructor(
-    private config: PrimeNG,
-    public themeService: ThemeService
-  ) {
+  constructor(private config: PrimeNG) {
     // Default theme configuration
     this.config.theme.set({
       preset: myTheme,
       options: {
-        prefix: 'p',
-        darkModeSelector: '.dark',
-        cssLayer: {
-          name: 'primeng',
-          order: 'tailwind-base, primeng, tailwind-utilities'
-        }
-      }
+        ripple: true,
+        inputStyle: 'filled',
+      },
     });
   }
 }
