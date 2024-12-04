@@ -72,11 +72,11 @@ export class HeaderComponent {
       icon: 'pi pi-user',
       command: () => this.router.navigate(['/profile']),
     },
-    {
-      label: 'Settings',
-      icon: 'pi pi-cog',
-      command: () => this.router.navigate(['/settings']),
-    },
+    // {
+    //   label: 'Settings',
+    //   icon: 'pi pi-cog',
+    //   command: () => this.router.navigate(['/settings']),
+    // },
     {
       separator: true,
     },

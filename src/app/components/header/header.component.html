@@ -1,4 +1,6 @@
-<header class="bg-white dark:bg-gray-800 shadow-sm">
+<header
+  class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
+>
   <nav class="mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
     <div class="flex h-16 items-center justify-between">
       <!-- Logo -->
@@ -67,7 +69,7 @@
             <img
               [src]="userImageUrl"
               alt=""
-              class="h-8 w-8 rounded-full bg-gray-50 object-cover object-center"
+              class="h-8 w-8 rounded-full bg-gray-50 object-cover object-center border-2 border-primary-500"
             />
             <span
               class="hidden text-sm font-medium text-gray-700 dark:text-gray-300 md:block"
@@ -97,7 +99,7 @@
 
         <button
           (click)="themeService.toggleDarkMode()"
-          class="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-theme-text dark:text-theme-text-dark hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors duration-200"
+          class="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors duration-200"
         >
           <span class="sr-only">Toggle theme</span>
           <!-- Sun icon -->

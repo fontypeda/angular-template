@@ -14,20 +14,6 @@ type ColorShades = {
 };
 
 export const primaryColors: ColorShades = {
-  50: '#e6faf4',
-  100: '#ccf5e9',
-  200: '#99ead3',
-  300: '#66e0bd',
-  400: '#33d5a7',
-  500: '#00c78c',
-  600: '#009f70',
-  700: '#007754',
-  800: '#004f38',
-  900: '#00271c',
-  950: '#001410'
-};
-
-export const secondaryColors: ColorShades = {
   50: '#eef2ff',
   100: '#e0e7ff',
   200: '#c7d2fe',
@@ -38,7 +24,21 @@ export const secondaryColors: ColorShades = {
   700: '#4338ca',
   800: '#3730a3',
   900: '#312e81',
-  950: '#1e1b4b'
+  950: '#1e1b4b',
+};
+
+export const secondaryColors: ColorShades = {
+  50: '#e6faf4',
+  100: '#ccf5e9',
+  200: '#99ead3',
+  300: '#66e0bd',
+  400: '#33d5a7',
+  500: '#00c78c',
+  600: '#009f70',
+  700: '#007754',
+  800: '#004f38',
+  900: '#00271c',
+  950: '#001410',
 };
 
 // Theme colors for both light and dark modes

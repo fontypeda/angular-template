@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PrimeNgModule } from '../../primeng.module';
+import { PrimeNgModule } from '../../shared/primeng.module';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 interface City {
@@ -14,16 +14,18 @@ interface TimelineEvent {
   description: string;
 }
 
-type StatusSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
+type StatusSeverity =
+  | 'success'
+  | 'info'
+  | 'warn'
+  | 'danger'
+  | 'secondary'
+  | 'contrast';
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    PrimeNgModule
-  ],
+  imports: [CommonModule, FormsModule, PrimeNgModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './test.component.html',
 })
@@ -41,22 +43,22 @@ export class TestComponent implements OnInit, OnDestroy {
     { name: 'San Francisco', code: 'SF' },
     { name: 'Los Angeles', code: 'LA' },
     { name: 'Chicago', code: 'CH' },
-    { name: 'Seattle', code: 'SE' }
+    { name: 'Seattle', code: 'SE' },
   ];
 
   timelineEvents: TimelineEvent[] = [
     {
       title: 'Modern UI Components',
-      description: 'Built with PrimeNG, offering a rich set of UI components.'
+      description: 'Built with PrimeNG, offering a rich set of UI components.',
     },
     {
       title: 'Responsive Design',
-      description: 'Fully responsive layout using Tailwind CSS.'
+      description: 'Fully responsive layout using Tailwind CSS.',
     },
     {
       title: 'Dark Mode Support',
-      description: 'Seamless dark mode integration with system preferences.'
-    }
+      description: 'Seamless dark mode integration with system preferences.',
+    },
   ];
 
   tableData = [
@@ -64,7 +66,7 @@ export class TestComponent implements OnInit, OnDestroy {
     { id: 2, name: 'Project Beta', status: 'Pending' },
     { id: 3, name: 'Project Gamma', status: 'Completed' },
     { id: 4, name: 'Project Delta', status: 'On Hold' },
-    { id: 5, name: 'Project Epsilon', status: 'Active' }
+    { id: 5, name: 'Project Epsilon', status: 'Active' },
   ];
 
   constructor(
@@ -109,7 +111,7 @@ export class TestComponent implements OnInit, OnDestroy {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
-      detail: 'Operation completed successfully'
+      detail: 'Operation completed successfully',
     });
   }
 
@@ -117,7 +119,7 @@ export class TestComponent implements OnInit, OnDestroy {
     this.messageService.add({
       severity: 'info',
       summary: 'Info',
-      detail: 'Information message'
+      detail: 'Information message',
     });
   }
 
@@ -125,7 +127,7 @@ export class TestComponent implements OnInit, OnDestroy {
     this.messageService.add({
       severity: 'warn',
       summary: 'Warning',
-      detail: 'Warning message'
+      detail: 'Warning message',
     });
   }
 
@@ -133,7 +135,7 @@ export class TestComponent implements OnInit, OnDestroy {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'Error occurred'
+      detail: 'Error occurred',
     });
   }
 
@@ -146,9 +148,9 @@ export class TestComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: 'Record deleted'
+          detail: 'Record deleted',
         });
-      }
+      },
     });
   }
 }

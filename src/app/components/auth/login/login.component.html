@@ -153,7 +153,11 @@
   </div>
 
   <div class="relative hidden w-0 flex-1 lg:block overflow-hidden">
-    <div class="absolute inset-0 h-full w-full" [ngStyle]="meshStyle"></div>
-    <div class="absolute inset-0 h-full w-full noise-filter opacity-50"></div>
+    <div
+      class="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
+      style="background-image: url('assets/images/bg.jpg')"
+    ></div>
+    <!-- add to inser a grainy effect over the image -->
+    <!-- <div class="absolute inset-0 h-full w-full noise-filter opacity-50"></div> -->
   </div>
 </div>

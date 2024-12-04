@@ -1,13 +1,12 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { authGuard, roleGuard } from './guards/auth.guard';
-import { TestComponent } from './components/test/test.component';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'home',
     component: HomeComponent,
-    canActivate: [authGuard],
+
     title: 'Home',
   },
   {
@@ -16,6 +15,15 @@ export const routes: Routes = [
       import('./components/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
     canActivate: [() => roleGuard('admin')],
     title: 'Admin',
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./components/auth/profile/profile.component').then(
+        (m) => m.ProfileComponent
+      ),
+    canActivate: [authGuard],
+    title: 'Profile',
   },
   {
     path: 'login',

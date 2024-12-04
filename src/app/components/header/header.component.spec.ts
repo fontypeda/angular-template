@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
 import { ThemeService } from '../../services/theme.service';
-import { PrimeNgModule } from '../../primeng.module';
+import { PrimeNgModule } from '../../shared/primeng.module';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -11,7 +11,7 @@ describe('HeaderComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HeaderComponent, PrimeNgModule],
-      providers: [ThemeService]
+      providers: [ThemeService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
