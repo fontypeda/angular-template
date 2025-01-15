@@ -1,178 +1,57 @@
-<header
-  class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
->
-  <nav class="mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
-    <div class="flex h-16 items-center justify-between">
-      <!-- Logo -->
-      <div class="flex">
-        <div class="flex items-center mr-8">
-          <a
-            routerLink="/"
-            class="text-xl font-bold text-gray-900 dark:text-white"
-          >
-            Logo
-          </a>
+<header class="flex justify-between items-center p-4 bg-surface-card shadow-2">
+  <!-- Left side with logo/brand -->
+  <div class="flex items-center">
+    <img src="assets/logo.png" alt="Logo" class="h-8 w-8 mr-2" />
+    <span class="text-xl font-bold">Music App</span>
+  </div>
+
+
+
+  <!-- Right side with user menu -->
+  <div class="flex items-center space-x-4">
+    <ng-container *ngIf="currentUser; else loginButton">
+      <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
+      <div class="flex items-center cursor-pointer gap-2" 
+           (click)="userMenu.toggle($event)"
+           pTooltip="User Menu"
+           tooltipPosition="bottom">
+        <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center"
+             [style]="getAvatarStyle()">
+          <img *ngIf="getAvatarUrl()" 
+               [src]="getAvatarUrl()" 
+               [alt]="getDisplayName()"
+               class="w-full h-full object-cover">
+          <span *ngIf="!getAvatarUrl()" 
+                class="text-white text-lg font-semibold">
+            {{ getUserInitials() }}
+          </span>
         </div>
-
-        <!-- Navigation Menu -->
-        <div class="hidden md:flex md:items-center md:space-x-6">
-          <!-- Show authenticated menu items when logged in -->
-          <ng-container *ngIf="isAuthenticated$ | async; else publicMenu">
-            <ng-container *ngFor="let item of authenticatedMenuItems">
-              <a
-                [routerLink]="item.routerLink"
-                routerLinkActive="text-primary-500"
-                [routerLinkActiveOptions]="{ exact: true }"
-                class="text-sm font-medium text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 flex items-center space-x-1"
-              >
-                <i [class]="item.icon"></i>
-                <span>{{ item.label }}</span>
-              </a>
-            </ng-container>
-          </ng-container>
-
-          <!-- Show public menu items when logged out -->
-          <ng-template #publicMenu>
-            <ng-container *ngFor="let item of publicMenuItems">
-              <a
-                [routerLink]="item.routerLink"
-                routerLinkActive="text-primary-500"
-                [routerLinkActiveOptions]="{ exact: true }"
-                class="text-sm font-medium text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 flex items-center space-x-1"
-              >
-                <i [class]="item.icon"></i>
-                <span>{{ item.label }}</span>
-              </a>
-            </ng-container>
-          </ng-template>
-        </div>
+        <span class="text-surface-600">{{ getDisplayName() }}</span>
+        <i class="pi pi-angle-down text-surface-600"></i>
       </div>
+    </ng-container>
+    
+    <ng-template #loginButton>
+      <button 
+        pButton 
+        type="button" 
+        label="Login" 
+        icon="pi pi-sign-in" 
+        routerLink="/auth/login"
+        class="p-button-outlined"
+      ></button>
+    </ng-template>
 
-      <!-- Right side buttons -->
-      <div class="flex items-center space-x-2">
-        <!-- Theme toggle button -->
-
-        <!-- User menu when authenticated -->
-        <ng-container *ngIf="isAuthenticated$ | async; else loginButton">
-          <p-menu
-            #userMenu
-            [model]="profileItems"
-            [popup]="true"
-            appendTo="body"
-          ></p-menu>
-          <button
-            #btn
-            type="button"
-            class="flex items-center space-x-2 rounded-full bg-white p-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-gray-800"
-            (click)="userMenu.toggle($event)"
-          >
-            <img
-              [src]="userImageUrl"
-              alt=""
-              class="h-8 w-8 rounded-full bg-gray-50 object-cover object-center border-2 border-primary-500"
-            />
-            <span
-              class="hidden text-sm font-medium text-gray-700 dark:text-gray-300 md:block"
-            >
-              {{ userName }}
-            </span>
-          </button>
-        </ng-container>
-
-        <!-- Login button when not authenticated -->
-        <ng-template #loginButton>
-          <ng-container *ngIf="showLoginButton$ | async">
-            <p-button
-              label="Sign in"
-              routerLink="/login"
-              class="hidden md:block"
-              outlined="true"
-            ></p-button>
-            <p-button
-              icon="pi pi-user"
-              severity="primary"
-              routerLink="/login"
-              class="md:hidden"
-            ></p-button>
-          </ng-container>
-        </ng-template>
-
-        <button
-          (click)="themeService.toggleDarkMode()"
-          class="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors duration-200"
-        >
-          <span class="sr-only">Toggle theme</span>
-          <!-- Sun icon -->
-          <svg
-            *ngIf="!(themeService.darkMode$ | async)"
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-            />
-          </svg>
-          <!-- Moon icon -->
-          <svg
-            *ngIf="themeService.darkMode$ | async"
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile menu -->
-    <div class="md:hidden">
-      <div class="space-y-1 pb-3 pt-2">
-        <!-- Show authenticated menu items when logged in -->
-        <ng-container *ngIf="isAuthenticated$ | async; else mobilePublicMenu">
-          <ng-container *ngFor="let item of authenticatedMenuItems">
-            <a
-              [routerLink]="item.routerLink"
-              routerLinkActive="text-primary-500"
-              [routerLinkActiveOptions]="{ exact: true }"
-              class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 flex items-center space-x-2"
-            >
-              <i [class]="item.icon"></i>
-              <span>{{ item.label }}</span>
-            </a>
-          </ng-container>
-        </ng-container>
-
-        <!-- Show public menu items when logged out -->
-        <ng-template #mobilePublicMenu>
-          <ng-container *ngFor="let item of publicMenuItems">
-            <a
-              [routerLink]="item.routerLink"
-              routerLinkActive="text-primary-500"
-              [routerLinkActiveOptions]="{ exact: true }"
-              class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 flex items-center space-x-2"
-            >
-              <i [class]="item.icon"></i>
-              <span>{{ item.label }}</span>
-            </a>
-          </ng-container>
-        </ng-template>
-      </div>
-    </div>
-  </nav>
+    <!-- Theme toggle -->
+    <button
+      pButton
+      type="button"
+      [icon]="(themeService.darkMode$ | async) ? 'pi pi-moon' : 'pi pi-sun'"
+      (click)="themeService.toggleDarkMode()"
+      class="p-button-rounded p-button-text"
+      [pTooltip]="(themeService.darkMode$ | async) ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+    ></button>
+  </div>
 </header>
 
 <p-toast></p-toast>

@@ -1,0 +1,300 @@
+<div class="container mx-auto px-4 py-8">
+  
+  <!-- Page Heading -->
+  <h1 class="text-3xl font-bold mb-6 text-gray-800">Your Playlists</h1>
+  
+  <!-- Header with Search and Create Playlist -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-8 bg-white p-4 rounded-md shadow-sm">
+    <!-- Search Bar -->
+    <div class="flex items-center w-full sm:w-auto mb-4 sm:mb-0">
+      <span class="p-input-icon-left w-full sm:w-80">
+        <i class="pi pi-search text-gray-500"></i>
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()"
+          placeholder="Search playlists..."
+          class="p-inputtext-sm w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Search Playlists"
+        />
+      </span>
+    </div>
+    <!-- Create Playlist Button -->
+    <button
+      pButton
+      icon="pi pi-plus"
+      label="Create Playlist"
+      (click)="showCreateDialog = true"
+      class="p-button-sm p-button-raised bg-blue-500 hover:bg-blue-600 border-transparent text-white"
+      aria-label="Create New Playlist"
+    ></button>
+  </div>
+  
+
+  
+  <!-- Playlists Grid -->
+  <div
+    *ngIf="!loading && filteredPlaylists.length > 0"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+    [@staggerAnimation]="filteredPlaylists.length"
+  >
+    <!-- Loop through playlists -->
+    <div
+      *ngFor="let playlist of filteredPlaylists"
+      class="relative group shadow-sm rounded-lg transition-shadow duration-300 hover:shadow-xl"
+      (click)="onPlaylistClick(playlist)"
+      aria-label="View Playlist Details"
+    >
+      <!-- Aspect Ratio Wrapper -->
+      <div class="w-full h-0 pb-[100%] relative  rounded-lg">
+        <!-- Blurred Background Image (Half Bottom) -->
+        <div
+          class="absolute inset-x-0 bottom-0 h-1/2 bg-cover bg-center filter blur-lg rounded-b-lg"
+          [style.background-image]="'url(' + playlist.randomBackground + ')'"
+          aria-hidden="true"
+        ></div>
+        
+        <!-- Semi-transparent Gradient Overlay -->
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-70 pointer-events-none"
+          aria-hidden="true"
+        ></div>
+        
+        <!-- Foreground Image -->
+        <img
+          class="absolute top-0 left-0 w-full h-full object-cover z-10 rounded-lg cursor-pointer transition-transform duration-500 ease-in-out group-hover:scale-105"
+          [src]="playlist.coverImage || playlist.randomBackground"
+          alt="{{playlist.name}} Cover Image"
+        />
+        
+        <!-- Bottom Information Overlay -->
+        <div 
+          class="absolute bottom-0 left-0 right-0 p-4 z-20 text-white
+                 bg-gradient-to-t from-black via-black/50 to-transparent"
+        >
+          <h3 class="text-lg font-semibold truncate" title="{{ playlist.name }}">
+            {{ playlist.name }}
+          </h3>
+          <div class="flex items-center gap-4 text-sm mt-1">
+            <div class="flex items-center gap-1">
+              <i class="pi pi-music"></i>
+              <span>{{ playlist.songCount }} songs</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <i class="pi pi-calendar"></i>
+              <span>{{ playlist.createdAt | date: 'mediumDate' }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- More Options Button -->
+        <button
+          pButton
+          icon="pi pi-ellipsis-v"
+          class="p-button-rounded p-button-text absolute top-2 right-2 z-30 !bg-black/20 hover:!bg-black/40 text-white"
+          (click)="$event.stopPropagation(); onMoreOptions(playlist)"
+          pTooltip="More options"
+          aria-label="More Options"
+        ></button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Empty State -->
+  <div *ngIf="!loading && filteredPlaylists.length === 0" class="text-center text-gray-600 mt-10">
+    <p class="text-lg mb-4">No playlists found.</p>
+    <button
+      pButton
+      icon="pi pi-plus"
+      label="Create Your First Playlist"
+      (click)="showCreateDialog = true"
+      class="p-button-raised bg-blue-500 hover:bg-blue-600 border-transparent text-white"
+      aria-label="Create Your First Playlist"
+    ></button>
+  </div>
+  
+  <!-- Create Playlist Dialog -->
+  <p-dialog 
+    [(visible)]="showCreateDialog" 
+    [modal]="true" 
+    header="Create New Playlist"
+    [style]="{width: '450px'}"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="p-fluid"
+    aria-labelledby="create-playlist-dialog"
+  >
+    <div class="p-6">
+      <p class="mb-4 text-gray-700">Give your new playlist a memorable name.</p>
+      <div class="mb-4">
+        <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Playlist Name</label>
+        <input 
+          id="name"
+          type="text" 
+          pInputText 
+          [(ngModel)]="newPlaylist.name" 
+          placeholder="Enter playlist name"
+          class="p-inputtext-sm w-full pl-3 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Playlist Name"
+        >
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end space-x-2">
+        <button 
+          pButton 
+          label="Cancel" 
+          icon="pi pi-times" 
+          class="p-button-text p-button-sm"
+          (click)="showCreateDialog = false"
+          aria-label="Cancel Creating Playlist"
+        ></button>
+        <button 
+          pButton 
+          label="Create" 
+          icon="pi pi-check" 
+          class="p-button-sm bg-blue-500 hover:bg-blue-600 border-transparent text-white"
+          [disabled]="!newPlaylist.name"
+          (click)="createPlaylist()"
+          aria-label="Confirm Create Playlist"
+        ></button>
+      </div>
+    </ng-template>
+  </p-dialog>
+  
+  <!-- Playlist Details Dialog -->
+  <p-dialog 
+    [(visible)]="showDetailsDialog" 
+    [modal]="true" 
+    [header]="selectedPlaylist?.name || 'Playlist Details'"
+    [style]="{width: '800px'}"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="playlist-details-dialog"
+    aria-labelledby="playlist-details-dialog"
+  >
+    <div class="p-6" *ngIf="selectedPlaylist">
+      <!-- Loading Songs -->
+      <div *ngIf="loadingSongs" class="space-y-3">
+        <p-skeleton *ngFor="let i of [1,2,3]" height="50px" styleClass="w-full rounded"></p-skeleton>
+      </div>
+      
+      <!-- Songs Table -->
+      <div *ngIf="!loadingSongs">
+        <p-table 
+          [value]="playlistSongs" 
+          [scrollable]="true" 
+          scrollHeight="400px"
+          styleClass="p-datatable-sm"
+          aria-label="Songs in Playlist"
+        >
+          <ng-template pTemplate="header">
+            <tr class="bg-gray-100">
+              <th class="w-12 text-left">#</th>
+              <th class="text-left">Title</th>
+              <th class="text-left">Artist</th>
+              <th class="w-24 text-left">Duration</th>
+              <th class="w-16"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-song let-i="rowIndex">
+            <tr class="hover:bg-gray-50">
+              <td class="text-gray-500">{{i + 1}}</td>
+              <td>
+                <div class="flex items-center">
+                  <img 
+                    [src]="song.coverUrl || 'assets/default-cover.png'" 
+                    class="w-10 h-10 rounded mr-3 object-cover" 
+                    alt="{{song.title}} Cover Image"
+                  >
+                  <span class="font-medium">{{song.title}}</span>
+                </div>
+              </td>
+              <td class="text-gray-600">{{song.artist}}</td>
+              <td class="text-gray-600">{{formatDuration(song.duration)}}</td>
+              <td>
+                <button 
+                  pButton 
+                  icon="pi pi-trash" 
+                  class="p-button-rounded p-button-text p-button-danger p-button-sm"
+                  (click)="removeSongFromPlaylist({id: song.id, playlist_id: selectedPlaylist.id})"
+                  pTooltip="Remove from playlist"
+                  aria-label="Remove Song from Playlist"
+                ></button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <tr>
+              <td colspan="5">
+                <div class="flex justify-between items-center text-gray-600">
+                  <span>Total Duration: {{getTotalDuration()}}</span>
+                  <span>{{playlistSongs.length}} songs</span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        
+        <!-- Actions -->
+        <div class="flex justify-end space-x-2 mt-6">
+          <button 
+            pButton 
+            icon="pi pi-trash" 
+            label="Delete Playlist"
+            class="p-button-danger p-button-sm"
+            (click)="deletePlaylist()"
+            aria-label="Delete Playlist"
+          ></button>
+          <button 
+            pButton 
+            icon="pi pi-share-alt" 
+            label="Share"
+            class="p-button-sm bg-green-500 hover:bg-green-600 border-transparent text-white"
+            (click)="sharePlaylist()"
+            aria-label="Share Playlist"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+  
+  <!-- Share Dialog -->
+  <p-dialog 
+    [(visible)]="showShareDialog" 
+    [modal]="true" 
+    header="Share Playlist"
+    [style]="{width: '500px'}"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="share-dialog"
+    aria-labelledby="share-playlist-dialog"
+  >
+    <div class="p-6">
+      <p class="mb-4 text-gray-700">Use this link to share your playlist with others:</p>
+      <div class="flex">
+        <input 
+          type="text" 
+          pInputText 
+          [value]="shareUrl" 
+          readonly 
+          class="p-inputtext-sm flex-grow rounded-l-md border border-gray-300 focus:outline-none"
+          aria-label="Share Link"
+        >
+        <button 
+          pButton 
+          icon="pi pi-copy" 
+          class="p-button-sm bg-blue-500 hover:bg-blue-600 border-transparent rounded-r-md"
+          (click)="copyShareLink()"
+          pTooltip="Copy to clipboard"
+          aria-label="Copy Share Link"
+        ></button>
+      </div>
+    </div>
+  </p-dialog>
+  
+  <!-- Toast for Notifications -->
+  <p-toast></p-toast>
+  
+</div>

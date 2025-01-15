@@ -1,0 +1,335 @@
+<div class="card">
+    <p-table 
+      #dt 
+      [value]="songs()" 
+      [(selection)]="selectedSongs"
+      (selectionChange)="onSelectionChange($event)"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} songs"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [globalFilterFields]="['title', 'artist']"
+      responsiveLayout="scroll"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+          <h5 class="m-0">Songs Library</h5>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input 
+              pInputText 
+              type="text" 
+              (input)="onGlobalFilter($event)"
+              placeholder="Search songs..." />
+          </span>
+        </div>
+      </ng-template>
+  
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 100px">Cover</th>
+          <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon></th>
+          <th pSortableColumn="artist">Artist <p-sortIcon field="artist"></p-sortIcon></th>
+          <th>Metadata</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+  
+      <ng-template pTemplate="body" let-song>
+        <tr>
+          <td>
+            <div 
+              class="w-16 h-16 rounded bg-gray-50"
+              [style.background]="getGradientStyle(song.id)">
+            </div>
+          </td>
+          <td>{{song.title}}</td>
+          <td>{{song.artist}}</td>
+          <td>
+            <div class="metadata-summary" *ngIf="song.metadata?.length">
+              <span *ngIf="song.metadata[0].bpm">{{song.metadata[0].bpm}} BPM</span>
+              <span *ngIf="song.metadata[0].song_key">{{song.metadata[0].song_key}}</span>
+              <span *ngIf="song.metadata[0].genre">{{song.metadata[0].genre}}</span>
+            </div>
+            <span *ngIf="!song.metadata?.length">No metadata</span>
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                styleClass="p-button-text"
+                (onClick)="openMetadataDialog(song)"
+                pTooltip="Edit metadata">
+              </p-button>
+              <p-button
+                icon="pi pi-list"
+                styleClass="p-button-text"
+                (onClick)="openPlaylistDialog(song)"
+                pTooltip="Manage playlists">
+              </p-button>
+              <p-button
+                icon="pi pi-code"
+                styleClass="p-button-text"
+                (onClick)="openJsonViewer(song)"
+                pTooltip="View JSON Data">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  
+    <!-- Metadata Dialog -->
+    <p-dialog 
+      [(visible)]="showMetadataDialog" 
+      [modal]="true" 
+      [style]="{width: '80vw', maxWidth: '1200px'}" 
+      [draggable]="false" 
+      [resizable]="false"
+      header="Song Details & Metadata">
+    
+      <div *ngIf="selectedSongForMetadata" class="grid">
+        <!-- Left Column - Song Info -->
+        <div class="col-12 md:col-4">
+          <div class="surface-card p-4 shadow-2 border-round">
+            <h3 class="text-xl font-semibold mb-3">Song Information</h3>
+            <div class="flex flex-column gap-3">
+              <div>
+                <label class="block text-600 mb-2">Title</label>
+                <span class="text-900">{{ selectedSongForMetadata.title }}</span>
+              </div>
+              <div>
+                <label class="block text-600 mb-2">Status</label>
+                <p-tag [value]="selectedSongForMetadata.track_status" 
+                      [severity]="getTrackStatusSeverity(selectedSongForMetadata.track_status)">
+                </p-tag>
+              </div>
+              <div>
+                <label class="block text-600 mb-2">Created</label>
+                <span class="text-900">{{ selectedSongForMetadata.created_at | date:'medium' }}</span>
+              </div>
+              <div>
+                <label class="block text-600 mb-2">Last Updated</label>
+                <span class="text-900">{{ selectedSongForMetadata.updated_at | date:'medium' }}</span>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Contacts Section -->
+          <div class="surface-card p-4 shadow-2 border-round mt-4">
+            <h3 class="text-xl font-semibold mb-3">Contributors</h3>
+            <div class="contributors-section">
+              <h3>Contributors</h3>
+              <div *ngFor="let contact of selectedSongForMetadata?.song_contacts">
+                <div class="contributor-item">
+                  <span class="contributor-name">{{ contact.contact?.name || 'Unknown' }}</span>
+                  <span class="contributor-role">({{ contact.role_in_song }})</span>
+                  <span class="contributor-split" *ngIf="contact.split_percentage">
+                    {{ contact.split_percentage }}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Playlists Section -->
+          <div class="surface-card p-4 shadow-2 border-round mt-4">
+            <h3 class="text-xl font-semibold mb-3">In Playlists</h3>
+            <div class="flex flex-column gap-2">
+              <div *ngFor="let playlistConnection of selectedSongForMetadata.playlists">
+                <div class="flex align-items-center p-2 surface-ground border-round">
+                  <i class="pi pi-list mr-2"></i>
+                  <span>{{ playlistConnection.playlist.name }}</span>
+                </div>
+              </div>
+              <div *ngIf="!selectedSongForMetadata.playlists?.length" class="text-600">
+                Not in any playlists
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Right Column - Metadata Form -->
+        <div class="col-12 md:col-8">
+          <form [formGroup]="metadataForm" class="surface-card p-4 shadow-2 border-round">
+            <h3 class="text-xl font-semibold mb-4">Metadata</h3>
+            
+            <div class="grid">
+              <!-- BPM -->
+              <div class="col-12 md:col-4 mb-4">
+                <label for="bpm" class="block text-600 mb-2">BPM</label>
+                <p-inputNumber id="bpm" 
+                              formControlName="bpm" 
+                              [showButtons]="true" 
+                              [min]="1" 
+                              [max]="300"
+                              class="w-full">
+                </p-inputNumber>
+              </div>
+  
+              <!-- Key -->
+              <div class="col-12 md:col-4 mb-4">
+                <label for="key" class="block text-600 mb-2">Key</label>
+                <p-dropdown id="key"
+                           formControlName="song_key" 
+                           [options]="musicalKeys"
+                           placeholder="Select Key"
+                           class="w-full">
+                </p-dropdown>
+              </div>
+  
+              <!-- Genre -->
+              <div class="col-12 md:col-4 mb-4">
+                <label for="genre" class="block text-600 mb-2">Genre</label>
+                <p-dropdown id="genre"
+                           formControlName="genre" 
+                           [options]="genres"
+                           placeholder="Select Genre"
+                           class="w-full">
+                </p-dropdown>
+              </div>
+  
+              <!-- Mood -->
+              <div class="col-12 mb-4">
+                <label for="mood" class="block text-600 mb-2">Mood</label>
+                <p-dropdown id="mood"
+                           formControlName="mood" 
+                           [options]="moods"
+                           placeholder="Select Mood"
+                           class="w-full">
+                </p-dropdown>
+              </div>
+  
+              <!-- Tags -->
+              <div class="col-12 mb-4">
+                <label class="block text-600 mb-2">Tags</label>
+                <div class="flex flex-wrap gap-2 mb-2">
+                  <p-chip *ngFor="let tag of metadataForm.get('tags')?.value" 
+                         [label]="tag"
+                         [removable]="true"
+                         (onRemove)="removeTag('tags', tag)">
+                  </p-chip>
+                </div>
+                <div class="p-inputgroup">
+                  <input type="text" pInputText #tagInput placeholder="Add a tag" 
+                         (keyup.enter)="addTag('tags', tagInput.value); tagInput.value = ''">
+                  <button type="button" pButton icon="pi pi-plus" 
+                          (click)="addTag('tags', tagInput.value); tagInput.value = ''">
+                  </button>
+                </div>
+              </div>
+  
+              <!-- Instruments -->
+              <div class="col-12">
+                <label class="block text-600 mb-2">Instruments</label>
+                <div class="flex flex-wrap gap-2 mb-2">
+                  <p-chip *ngFor="let instrument of metadataForm.get('instruments')?.value" 
+                         [label]="instrument"
+                         [removable]="true"
+                         (onRemove)="removeTag('instruments', instrument)">
+                  </p-chip>
+                </div>
+                <div class="p-inputgroup">
+                  <input type="text" pInputText #instrumentInput placeholder="Add an instrument" 
+                         (keyup.enter)="addTag('instruments', instrumentInput.value); instrumentInput.value = ''">
+                  <button type="button" pButton icon="pi pi-plus" 
+                          (click)="addTag('instruments', instrumentInput.value); instrumentInput.value = ''">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+      <ng-template pTemplate="footer">
+        <div class="flex justify-between w-full">
+          <button 
+            pButton 
+            icon="pi pi-trash" 
+            label="Delete Song" 
+            class="p-button-danger"
+            (click)="onDeleteSong(selectedSongForMetadata!, $event)">
+          </button>
+          <div>
+            <button 
+              pButton 
+              icon="pi pi-times" 
+              label="Cancel" 
+              class="p-button-text"
+              (click)="showMetadataDialog = false">
+            </button>
+            <button 
+              pButton 
+              icon="pi pi-check" 
+              label="Save" 
+              class="p-button-text" 
+              (click)="saveMetadata()">
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </p-dialog>
+  
+    <p-confirmDialog></p-confirmDialog>
+  
+    <!-- JSON viewer dialog -->
+    <p-dialog [(visible)]="showJsonDialog" 
+              [modal]="true" 
+              [style]="{width: '80vw'}" 
+              [draggable]="false" 
+              [resizable]="false"
+              header="Song JSON Data">
+      <div class="p-4">
+        <div *ngIf="songJsonData" class="bg-gray-100 p-4 rounded overflow-auto max-h-[70vh]">
+          <pre class="whitespace-pre-wrap break-all">{{ songJsonData | json }}</pre>
+        </div>
+        <div *ngIf="!songJsonData" class="text-center p-4">
+          Loading song data...
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button
+          label="Close" 
+          icon="pi pi-times" 
+          (click)="closeJsonViewer()" 
+          class="p-button-text"></p-button>
+      </ng-template>
+    </p-dialog>
+  
+    <!-- Playlist Dialog -->
+    <p-dialog
+      [(visible)]="showPlaylistDialog"
+      [modal]="true"
+      [style]="{ width: '450px' }"
+      header="Manage Playlists"
+      (onHide)="closePlaylistDialog()"
+    >
+      <div class="grid p-fluid">
+        <div class="col-12">
+          <p>Select playlists for this song:</p>
+          <div *ngFor="let playlist of playlists()" class="p-field-checkbox mb-2">
+            <p-button
+              [icon]="isInPlaylist(selectedSongForPlaylist?.id || 0, playlist.id) ? 'pi pi-minus' : 'pi pi-plus'"
+              [styleClass]="isInPlaylist(selectedSongForPlaylist?.id || 0, playlist.id) ? 'p-button-danger' : 'p-button-success'"
+              (onClick)="togglePlaylist(playlist.id)"
+              [label]="playlist.name"
+            ></p-button>
+          </div>
+        </div>
+      </div>
+  
+      <ng-template pTemplate="footer">
+        <p-button
+          label="Close"
+          icon="pi pi-times"
+          (onClick)="closePlaylistDialog()"
+        ></p-button>
+      </ng-template>
+    </p-dialog>
+  
+    <p-toast></p-toast>
+  </div>
+  

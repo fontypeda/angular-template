@@ -1,0 +1,321 @@
+<p-toast position="top-right"></p-toast>
+
+
+  <form [formGroup]="uploadForm" class="w-full max-w-7xl mx-auto p-6 space-y-6">
+    
+    <!-- Upload Sections Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Song Upload Section -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4">Upload Your Song</h2>
+        <div class="text-sm text-gray-600 mb-4">
+          <p>• Supported formats: MP3 (recommended), WAV, AIFF</p>
+          <p>• Maximum file size: 10MB</p>
+          <p>• Recommended bitrate: 320kbps for MP3</p>
+        </div>
+        <p-fileUpload
+          #songUpload
+          [customUpload]="true"
+          (uploadHandler)="onSongUpload($event)"
+          [auto]="true"
+          chooseLabel="Choose Song"
+          [showUploadButton]="false"
+          [showCancelButton]="false"
+          accept="audio/*"
+          [maxFileSize]="10000000"
+          class="w-full">
+          <ng-template pTemplate="content">
+            <div class="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg">
+              <div *ngIf="!songFile" class="text-center">
+                <p class="text-gray-600">Drag and drop your song here</p>
+                <p class="text-sm text-gray-500">MP3, WAV, or AIFF (max. 10MB)</p>
+              </div>
+              <div *ngIf="songFile" class="text-center">
+                <p class="text-green-600 font-medium">{{songFile.name}}</p>
+                <p class="text-sm text-gray-500">{{(songFile.size / 1024 / 1024).toFixed(2)}} MB</p>
+              </div>
+            </div>
+          </ng-template>
+        </p-fileUpload>
+      </div>
+
+      <!-- Cover Image Upload Section -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4">Cover Artwork</h2>
+        <div class="text-sm text-gray-600 mb-4">
+          <p>• Recommended size: 3000x3000 pixels (square)</p>
+          <p>• Minimum size: 1400x1400 pixels</p>
+          <p>• Supported formats: JPG (recommended), PNG, WebP</p>
+          <p>• Maximum file size: 5MB</p>
+        </div>
+        <p-fileUpload
+          #coverUpload
+          [customUpload]="true"
+          (uploadHandler)="onCoverImageUpload($event)"
+          [auto]="true"
+          chooseLabel="Choose Image"
+          [showUploadButton]="false"
+          [showCancelButton]="false"
+          accept="image/*"
+          [maxFileSize]="5000000"
+          class="w-full">
+          <ng-template pTemplate="content">
+            <div class="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg">
+              <div *ngIf="!coverImagePreview" class="text-center">
+                <p class="text-gray-600">Drag and drop your cover image here</p>
+                <p class="text-sm text-gray-500">JPG, PNG, or WebP (max. 5MB)</p>
+              </div>
+              <div *ngIf="coverImagePreview" class="relative">
+                <img [src]="coverImagePreview" class="w-48 h-48 object-cover rounded-lg" alt="Cover preview"/>
+                <button 
+                  (click)="removeCoverImage()"
+                  class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none">
+                  <span class="sr-only">Remove image</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </p-fileUpload>
+      </div>
+    </div>
+
+    <!-- Song Details Section -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold mb-4">Song Details</h2>
+      
+      <!-- Title -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+        <input 
+          pInputText 
+          type="text" 
+          formControlName="title"
+          class="w-full" 
+          placeholder="Enter song title"/>
+      </div>
+
+      <!-- Track Status -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Track Status *</label>
+        <p-dropdown
+          [options]="trackStatusOptions"
+          formControlName="trackStatus"
+          optionLabel="name"
+          optionValue="code"
+          [style]="{'width': '100%'}"
+          placeholder="Select track status">
+        </p-dropdown>
+      </div>
+
+      <!-- Artists -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Artists *</label>
+        <p-multiSelect
+          [options]="contacts"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="38"
+          [filter]="true"
+          optionLabel="name"
+          optionValue="id"
+          [style]="{'width': '100%'}"
+          placeholder="Select artists"
+          formControlName="selectedArtists"
+          [showHeader]="true"
+          [showClear]="true">
+          <ng-template pTemplate="header">
+            <div class="flex justify-between items-center px-3 py-1">
+              <span class="text-sm font-medium">Artists</span>
+              <button 
+                pButton 
+                type="button" 
+                icon="pi pi-plus" 
+                class="p-button-text p-button-sm"
+                (click)="showNewArtistDialog()">
+                New Artist
+              </button>
+            </div>
+          </ng-template>
+        </p-multiSelect>
+      </div>
+
+      <!-- Writers -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Writers</label>
+        <p-multiSelect
+          [options]="contacts"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="38"
+          [filter]="true"
+          optionLabel="name"
+          optionValue="id"
+          [style]="{'width': '100%'}"
+          placeholder="Select writers"
+          formControlName="selectedWriters"
+          [showHeader]="true"
+          [showClear]="true">
+          <ng-template pTemplate="header">
+            <div class="flex justify-between items-center px-3 py-1">
+              <span class="text-sm font-medium">Writers</span>
+              <button 
+                pButton 
+                type="button" 
+                icon="pi pi-plus" 
+                class="p-button-text p-button-sm"
+                (click)="showNewWriterDialog()">
+                New Writer
+              </button>
+            </div>
+          </ng-template>
+        </p-multiSelect>
+      </div>
+
+      <!-- Technical Details Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <!-- BPM -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">BPM</label>
+          <p class="text-sm text-gray-600 mb-2">Song tempo (20-300 BPM)</p>
+          <p-inputNumber
+            formControlName="bpm"
+            [showButtons]="true"
+            [min]="20"
+            [max]="300"
+            class="w-full">
+          </p-inputNumber>
+        </div>
+
+        <!-- Key -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Key</label>
+          <p class="text-sm text-gray-600 mb-2">Musical key of the song</p>
+          <p-multiSelect
+            formControlName="key"
+            [options]="keys"
+            optionLabel="name"
+            optionValue="code"
+            [selectionLimit]="1"
+            placeholder="Select key"
+            class="w-full">
+          </p-multiSelect>
+        </div>
+
+        <!-- Genre -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+          <p class="text-sm text-gray-600 mb-2">Select or add new genres that best describe your song</p>
+          <div class="flex gap-2">
+            <p-multiSelect
+              formControlName="genre"
+              [options]="genres"
+              optionLabel="name"
+              optionValue="code"
+              placeholder="Select genre"
+              class="flex-1">
+            </p-multiSelect>
+            <button 
+              pButton 
+              type="button" 
+              (click)="addNewGenre()"
+              icon="pi pi-plus"
+              class="p-button-secondary">
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mood -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Mood</label>
+        <p class="text-sm text-gray-600 mb-2">Choose moods that reflect the emotional tone of your song</p>
+        <div class="flex gap-2">
+          <p-multiSelect
+            formControlName="mood"
+            [options]="moods"
+            optionLabel="name"
+            optionValue="code"
+            placeholder="Select mood"
+            class="flex-1">
+          </p-multiSelect>
+          <button 
+            pButton 
+            type="button" 
+            (click)="addNewMood()"
+            icon="pi pi-plus"
+            class="p-button-secondary">
+          </button>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tags</label>
+        <p class="text-sm text-gray-600 mb-2">Add keywords to help listeners find your song (press Enter to add)</p>
+        <div class="flex flex-wrap gap-2 mb-2">
+          <p-chip 
+            *ngFor="let tag of uploadForm.get('tags')?.value"
+            [label]="tag"
+            [removable]="true"
+            (onRemove)="removeTag(tag)">
+          </p-chip>
+        </div>
+        <div class="flex gap-2">
+          <input 
+            #tagInput
+            pInputText 
+            type="text" 
+            placeholder="Add a tag"
+            (keyup.enter)="addTag(tagInput.value); tagInput.value = ''"
+            class="flex-1"/>
+        </div>
+      </div>
+
+      <!-- Instruments -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Instruments</label>
+        <p class="text-sm text-gray-600 mb-2">List the instruments used in your song (press Enter to add)</p>
+        <div class="flex flex-wrap gap-2 mb-2">
+          <p-chip 
+            *ngFor="let instrument of uploadForm.get('instruments')?.value"
+            [label]="instrument"
+            [removable]="true"
+            (onRemove)="removeInstrument(instrument)">
+          </p-chip>
+        </div>
+        <div class="flex gap-2">
+          <input 
+            #instrumentInput
+            pInputText 
+            type="text" 
+            placeholder="Add an instrument"
+            (keyup.enter)="addInstrument(instrumentInput.value); instrumentInput.value = ''"
+            class="flex-1"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex justify-end">
+      <button 
+        pButton 
+        type="button"
+        (click)="onSubmit()"
+        label="Upload Song"
+        [loading]="isSubmitting"
+        [disabled]="!uploadForm.valid || !songFile || isSubmitting"
+        class="p-button-primary">
+      </button>
+    </div>
+  </form>
+
+  <app-contact-form
+    [(visible)]="showContactDialog"
+    [title]="dialogMode === 'artist' ? 'Add New Artist' : 'Add New Writer'"
+    [submitLabel]="dialogMode === 'artist' ? 'Add Artist' : 'Add Writer'"
+    [isSubmitting]="isSubmitting"
+    (submit)="onContactSubmit($event)">
+  </app-contact-form>
+
+  <p-toast></p-toast>

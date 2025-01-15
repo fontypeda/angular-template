@@ -77,7 +77,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { TreeModule } from 'primeng/tree';
 import { TreeSelectModule } from 'primeng/treeselect';
 import { TreeTableModule } from 'primeng/treetable';
-import { SortIcon } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
 
 // PrimeNG Services
@@ -164,8 +163,7 @@ const modules = [
   TooltipModule,
   TreeModule,
   TreeSelectModule,
-  TreeTableModule,
-  SortIcon
+  TreeTableModule
 ];
 
 @NgModule({

@@ -1,0 +1,143 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.playlist-card {
+  position: relative;
+  transform-origin: center;
+  will-change: transform, opacity;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  aspect-ratio: 1;
+  cursor: pointer;
+  
+  .card-background {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    
+    &.blur-layer {
+      filter: blur(16px);
+      transform: scale(1.1); // Prevent blur edges from showing
+      opacity: 0.8;
+      background-color: var(--surface-900);
+    }
+    
+    &.main-layer {
+      z-index: 1;
+    }
+  }
+
+  .card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: 1.5rem;
+    color: white;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: white;
+  }
+
+  .card-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .more-options {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 3;
+  }
+
+  &:hover {
+    .card-background.main-layer {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+  }
+}
+
+.playlist-skeleton {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  will-change: opacity;
+  
+  .p-skeleton {
+    animation: none !important;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+// Enhance PrimeNG components
+::ng-deep {
+  .p-card {
+    .p-card-content {
+      padding: 0;
+    }
+  }
+  
+  .p-skeleton {
+    &.p-skeleton-circle {
+      border-radius: 50%;
+    }
+    
+    &.p-skeleton-none {
+      animation: none !important;
+    }
+  }
+  
+  // Smooth dialog transitions
+  .p-dialog {
+    .p-dialog-content {
+      padding: 0;
+    }
+    
+    &.p-dialog-enter {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    
+    &.p-dialog-enter-active {
+      transform: scale(1);
+      opacity: 1;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    &.p-dialog-leave {
+      transform: scale(1);
+      opacity: 1;
+    }
+    
+    &.p-dialog-leave-active {
+      transform: scale(0.9);
+      opacity: 0;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+  
+  // Button transitions
+  .p-button {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+}

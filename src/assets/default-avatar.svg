@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="64" cy="64" r="64" fill="#E2E8F0"/>
+  
+  <!-- Avatar Shape -->
+  <path d="M64 68C77.2548 68 88 57.2548 88 44C88 30.7452 77.2548 20 64 20C50.7452 20 40 30.7452 40 44C40 57.2548 50.7452 68 64 68Z" fill="#94A3B8"/>
+  <path d="M64 76C40.2518 76 21 95.2518 21 119C21 123.418 24.5817 127 29 127H99C103.418 127 107 123.418 107 119C107 95.2518 87.7482 76 64 76Z" fill="#94A3B8"/>
+</svg>

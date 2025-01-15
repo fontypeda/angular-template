@@ -1,98 +1,103 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { MenuModule } from 'primeng/menu';
-import { MenuItem } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
-import { AuthService } from '../../services/auth.service';
+import { Router, RouterModule } from '@angular/router';
+import { PrimeNgModule } from '../../shared/primeng.module';
+import { AuthService, User } from '../../services/auth.service';
 import { ThemeService } from '../../services/theme.service';
-import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-
-interface MenuItemWithIcon {
-  label: string;
-  icon: string;
-  routerLink: string[];
-}
+import { Subscription } from 'rxjs';
+import { MenuItem } from 'primeng/api';
+import { GradientService } from '../../services/gradient.service';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, ButtonModule, MenuModule, ToastModule],
+  imports: [CommonModule, RouterModule, PrimeNgModule],
   templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  themeService = inject(ThemeService);
+export class HeaderComponent implements OnInit, OnDestroy {
+  private authSubscription: Subscription | null = null;
+  currentUser: User | null = null;
+  avatarGradient: SafeStyle | null = null;
 
-  // Authentication state
-  isAuthenticated$ = this.authService.isAuthenticated();
-  userName = 'John Doe'; // Replace with actual user name from auth service
-  userImageUrl = '/assets/images/avatar.jpg'; // Replace with actual user image
-
-  // Show login button only when not on login page
-  showLoginButton$ = this.router.events.pipe(
-    map(() => !this.router.url.includes('/login'))
-  );
-
-  // Menu items for authenticated users
-  authenticatedMenuItems: MenuItemWithIcon[] = [
-    {
-      label: 'Admin',
-      icon: 'pi pi-cog',
-      routerLink: ['/admin'],
-    },
-    {
-      label: 'PrimeComponents',
-      icon: 'pi pi-cog',
-      routerLink: ['/primeComponents'],
-    },
-  ];
-
-  // Menu items for public users
-  publicMenuItems: MenuItemWithIcon[] = [
-    {
-      label: 'Home',
-      icon: 'pi pi-home',
-      routerLink: ['/'],
-    },
-    {
-      label: 'About',
-      icon: 'pi pi-info-circle',
-      routerLink: ['/about'],
-    },
-  ];
-
-  // Profile menu items
-  profileItems: MenuItem[] = [
+  userMenuItems: MenuItem[] = [
     {
       label: 'Profile',
       icon: 'pi pi-user',
-      command: () => this.router.navigate(['/profile']),
-    },
-    // {
-    //   label: 'Settings',
-    //   icon: 'pi pi-cog',
-    //   command: () => this.router.navigate(['/settings']),
-    // },
-    {
-      separator: true,
+      routerLink: '/profile',
     },
     {
-      label: 'Sign out',
-      icon: 'pi pi-power-off',
+      separator: true
+    },
+    {
+      label: 'Settings',
+      icon: 'pi pi-cog',
+      routerLink: '/settings',
+    },
+    {
+      separator: true
+    },
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
       command: () => this.logout(),
     },
   ];
 
-  async logout(): Promise<void> {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    public themeService: ThemeService,
+    private gradientService: GradientService,
+    private sanitizer: DomSanitizer
+  ) {}
+
+  ngOnInit() {
+    this.authSubscription = this.authService.currentUser.subscribe((user) => {
+      this.currentUser = user;
+      console.log('Current user:', user);
+      if (user) {
+        // Always generate gradient as fallback
+        const seed = user.email || 'default';
+        this.avatarGradient = this.sanitizer.bypassSecurityTrustStyle(
+          `background: ${this.gradientService.generateRandomPastelGradient()}`
+        );
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
+
+  async logout() {
     try {
       await this.authService.logout();
-      await this.router.navigate(['/login']);
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error('Logout error:', error);
     }
+  }
+
+  getAvatarStyle(): SafeStyle | null {
+    if (this.currentUser?.profile?.avatar_url) {
+      return null;
+    }
+    return this.avatarGradient;
+  }
+
+  getAvatarUrl(): string | null {
+    return this.currentUser?.profile?.avatar_url || null;
+  }
+
+  getDisplayName(): string {
+    return this.currentUser?.email || '';
+  }
+
+  getUserInitials(): string {
+    const email = this.currentUser?.email || '';
+    return email.charAt(0).toUpperCase();
   }
 }

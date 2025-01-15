@@ -14,247 +14,163 @@
     ></p-button>
   </div>
 
-  <p-tabs value="0">
-    <p-tablist>
-      <p-tab value="0">Overview</p-tab>
-      <p-tab value="1">Features</p-tab>
-      <p-tab value="2">Components</p-tab>
-    </p-tablist>
-    <p-tabpanels>
-      <p-tabpanel value="0">
-        <div class="p-4">
-          <h2
-            class="text-2xl font-semibold mb-4 text-theme-text dark:text-theme-text-dark"
-          >
-            About the Template
-          </h2>
-          <p class="mb-4 text-gray-600 dark:text-gray-400">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </p>
-          <p-chip label="Angular 18" class="mr-2"></p-chip>
-          <p-chip label="PrimeNG" class="mr-2"></p-chip>
-          <p-chip label="Tailwind CSS"></p-chip>
-        </div>
-      </p-tabpanel>
-      <p-tabpanel value="1">
-        <div class="p-4">
-          <p-timeline [value]="timelineEvents" align="alternate">
-            <ng-template pTemplate="content" let-event>
-              <div class="text-theme-text dark:text-theme-text-dark">
-                <h3 class="text-xl font-semibold mb-2">{{ event.title }}</h3>
-                <p class="text-gray-600 dark:text-gray-400">
-                  {{ event.description }}
-                </p>
-              </div>
-            </ng-template>
-          </p-timeline>
-        </div>
-      </p-tabpanel>
-      <p-tabpanel value="2">
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-transparent"
-        >
-          <p-card header="Form Elements">
-            <div class="space-y-4">
-              <div class="mb-4">
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >Select City</label
-                >
-                <p-dropdown
-                  [options]="cities"
-                  [(ngModel)]="selectedCity"
-                  optionLabel="name"
-                  placeholder="Select a City"
-                  [style]="{ width: '100%' }"
-                  class="w-full"
-                >
-                </p-dropdown>
-              </div>
-              <div class="mb-4">
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >Date</label
-                >
-                <p-calendar
-                  [(ngModel)]="selectedDate"
-                  [showIcon]="true"
-                  styleClass="w-full"
-                ></p-calendar>
-              </div>
-              <div class="mb-4">
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >Rating</label
-                >
-                <p-rating [(ngModel)]="rating" [stars]="5"></p-rating>
+  <p-tabView>
+    <p-tabPanel header="Overview">
+      <div class="p-4">
+        <h2 class="text-2xl font-semibold mb-4 text-theme-text dark:text-theme-text-dark">
+          About the Template
+        </h2>
+        <p class="mb-4 text-gray-600 dark:text-gray-400">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+          ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat.
+        </p>
+        <p-chip label="Angular 18" class="mr-2"></p-chip>
+        <p-chip label="PrimeNG" class="mr-2"></p-chip>
+        <p-chip label="Tailwind CSS"></p-chip>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Features">
+      <div class="p-4">
+        <p-timeline [value]="timelineEvents" align="alternate">
+          <ng-template pTemplate="content" let-event>
+            <div class="text-theme-text dark:text-theme-text-dark">
+              <h3 class="text-xl font-semibold mb-2">{{ event.title }}</h3>
+              <p class="text-gray-600 dark:text-gray-400">
+                {{ event.description }}
+              </p>
+            </div>
+          </ng-template>
+        </p-timeline>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Components">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-transparent">
+        <p-card header="Form Elements">
+          <div class="space-y-4">
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select City</label>
+              <p-dropdown
+                [options]="cities"
+                [(ngModel)]="selectedCity"
+                optionLabel="name"
+                placeholder="Select a City"
+                [style]="{ width: '100%' }"
+                class="w-full"
+              >
+              </p-dropdown>
+            </div>
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date</label>
+              <p-calendar
+                [(ngModel)]="selectedDate"
+                [showIcon]="true"
+                styleClass="w-full"
+              ></p-calendar>
+            </div>
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Rating</label>
+              <p-rating [(ngModel)]="rating" [stars]="5"></p-rating>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card header="Interactive Elements">
+          <div class="space-y-4">
+            <div class="mb-4">
+              <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
+              <span class="ml-2 text-gray-700 dark:text-gray-300">Toggle Switch</span>
+            </div>
+            <div class="mb-4">
+              <p-slider [(ngModel)]="sliderValue" [min]="0" [max]="100"></p-slider>
+              <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Value: {{ sliderValue }}
               </div>
             </div>
-          </p-card>
-
-          <p-card header="Interactive Elements">
-            <div class="space-y-4">
-              <div class="mb-4">
-                <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
-                <span class="ml-2 text-gray-700 dark:text-gray-300"
-                  >Toggle Switch</span
-                >
-              </div>
-              <div class="mb-4">
-                <p-slider
-                  [(ngModel)]="sliderValue"
-                  [min]="0"
-                  [max]="100"
-                ></p-slider>
-                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Value: {{ sliderValue }}
-                </div>
-              </div>
-              <div>
-                <p-knob [(ngModel)]="knobValue" [min]="0" [max]="100"></p-knob>
-              </div>
+            <div>
+              <p-knob [(ngModel)]="knobValue" [min]="0" [max]="100"></p-knob>
             </div>
-          </p-card>
+          </div>
+        </p-card>
 
-          <p-card header="Progress Elements">
-            <div class="space-y-6">
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >Progress Bar</label
-                >
-                <p-progressBar [value]="65" [showValue]="false"></p-progressBar>
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >Loading</label
-                >
-                <p-skeleton width="100%" height="150px"></p-skeleton>
-              </div>
+        <p-card header="Progress Elements">
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Progress Bar</label>
+              <p-progressBar [value]="65" [showValue]="false"></p-progressBar>
             </div>
-          </p-card>
-        </div>
-      </p-tabpanel>
-    </p-tabpanels>
-  </p-tabs>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Loading</label>
+              <p-skeleton width="100%" height="150px"></p-skeleton>
+            </div>
+          </div>
+        </p-card>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
 
-  <!-- Data Table Section -->
-  <p-card header="Data Table Example" styleClass="mb-8">
-    <p-table
-      [value]="tableData"
-      [paginator]="true"
-      [rows]="5"
-      [showCurrentPageReport]="true"
-      responsiveLayout="scroll"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      [rowsPerPageOptions]="[5, 10, 25]"
-      [filterDelay]="0"
-      [globalFilterFields]="['name', 'status']"
-    >
-      <ng-template pTemplate="caption">
+  <!-- API Test Section -->
+  <div class="my-8">
+    <p-card header="API Tests">
+      <div class="mb-4">
         <div class="flex justify-between items-center">
-          <h5 class="m-0">Manage Records</h5>
-          <span class="p-input-icon-left">
-            <i class="pi pi-search"></i>
-            <input
-              pInputText
-              type="text"
-              (input)="applyFilter($event)"
-              placeholder="Search..."
-            />
-          </span>
-        </div>
-      </ng-template>
-
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
-          <th pSortableColumn="name">
-            Name <p-sortIcon field="name"></p-sortIcon>
-          </th>
-          <th pSortableColumn="status">
-            Status <p-sortIcon field="status"></p-sortIcon>
-          </th>
-          <th>Actions</th>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-item>
-        <tr>
-          <td>{{ item.id }}</td>
-          <td>{{ item.name }}</td>
-          <td>
-            <p-tag
-              [value]="item.status"
-              [severity]="getStatusSeverity(item.status)"
-            ></p-tag>
-          </td>
-          <td>
-            <p-button
-              icon="pi pi-pencil"
-              styleClass="p-button-rounded p-button-text mr-2"
-            ></p-button>
-            <p-button
-              icon="pi pi-trash"
-              styleClass="p-button-rounded p-button-danger p-button-text"
-            ></p-button>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </p-card>
-
-  <!-- Message Section -->
-  <p-card header="Messages & Notifications" styleClass="mb-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <h3
-          class="text-xl font-semibold mb-4 text-theme-text dark:text-theme-text-dark"
-        >
-          Toast Messages
-        </h3>
-        <div class="space-x-2">
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">API Test Runner</h2>
           <p-button
-            label="Success"
-            (onClick)="showSuccess()"
-            styleClass="p-button-success"
-          ></p-button>
-          <p-button
-            label="Info"
-            (onClick)="showInfo()"
-            styleClass="p-button-info"
-          ></p-button>
-          <p-button
-            label="Warning"
-            (onClick)="showWarn()"
-            styleClass="p-button-warning"
-          ></p-button>
-          <p-button
-            label="Error"
-            (onClick)="showError()"
-            styleClass="p-button-danger"
+            label="Run API Tests"
+            icon="pi pi-play"
+            [loading]="isRunningTests"
+            (onClick)="runAllTests()"
+            styleClass="p-button-primary"
           ></p-button>
         </div>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+          Click the button above to run all API tests. Results will appear in the table below.
+        </p>
       </div>
-      <div>
-        <h3
-          class="text-xl font-semibold mb-4 text-theme-text dark:text-theme-text-dark"
-        >
-          Confirm Dialog
-        </h3>
-        <p-button
-          label="Delete Record"
-          (onClick)="confirmDelete()"
-          styleClass="p-button-danger"
-        ></p-button>
-      </div>
-    </div>
-  </p-card>
+
+      <!-- Test Results Table -->
+      <p-table
+        [value]="testResults"
+        [scrollable]="true"
+        [scrollHeight]="'400px'"
+        styleClass="p-datatable-sm"
+        [showLoader]="true"
+        [loading]="isRunningTests"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 30%">Test Name</th>
+            <th style="width: 20%">Status</th>
+            <th style="width: 50%">Message</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-result>
+          <tr>
+            <td>{{ result.name }}</td>
+            <td>
+              <p-tag
+                [value]="result.status"
+                [severity]="result.status === 'success' ? 'success' : 'danger'"
+              ></p-tag>
+            </td>
+            <td>{{ result.message }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3" class="text-center p-4">
+              <div class="text-gray-500 dark:text-gray-400">
+                <i class="pi pi-info-circle mr-2"></i>
+                No test results available. Click "Run API Tests" to start testing.
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+
+  <p-toast position="top-right"></p-toast>
+  <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
 </div>
-
-<p-toast></p-toast>
-<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

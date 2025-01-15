@@ -4,9 +4,6 @@ import { RouterModule } from '@angular/router';
 import { PrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
 import { ThemeService } from './services/theme.service';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { ToastModule } from 'primeng/toast';
 import { primaryColors } from './config/colors';
 import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';
@@ -29,30 +26,18 @@ const MyPreset = definePreset(Aura, {
     colorScheme: {
       light: {
         primary: {
-          color: '{zinc.950}',
-          inverseColor: '#ffffff',
-          hoverColor: '{zinc.900}',
-          activeColor: '{zinc.800}',
-        },
-        highlight: {
-          background: '{zinc.950}',
-          focusBackground: '{zinc.700}',
-          color: '#ffffff',
-          focusColor: '#ffffff',
+          main: '{zinc.800}',
+          surface: '{zinc.50}',
+          border: '{zinc.200}',
+          hover: '{zinc.100}',
         },
       },
       dark: {
         primary: {
-          color: '{zinc.50}',
-          inverseColor: '{zinc.950}',
-          hoverColor: '{zinc.100}',
-          activeColor: '{zinc.200}',
-        },
-        highlight: {
-          background: 'rgba(250, 250, 250, .16)',
-          focusBackground: 'rgba(250, 250, 250, .24)',
-          color: 'rgba(255,255,255,.87)',
-          focusColor: 'rgba(255,255,255,.87)',
+          main: '{zinc.200}',
+          surface: '{zinc.800}',
+          border: '{zinc.700}',
+          hover: '{zinc.900}',
         },
       },
     },
@@ -65,11 +50,17 @@ const MyPreset = definePreset(Aura, {
   imports: [
     CommonModule,
     RouterModule,
-    HeaderComponent,
-    FooterComponent,
-    ToastModule,
   ],
-  templateUrl: './app.component.html',
+  template: `
+    <div class="min-h-screen">
+      <router-outlet></router-outlet>
+    </div>
+  `,
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
 })
 export class AppComponent {
   themeService = inject(ThemeService);
