@@ -32,7 +32,7 @@ import { PageHeaderComponent } from '../../layouts/components/page-header/page-h
         </aside>
 
         <!-- Main content -->
-        <main class="flex-1 p-4 sm:p-16 lg:p-24 xl:p-32">
+        <main class="flex-1 p-4 sm:p-16 lg:p-24 xl:p-32 2xl:p-60">
           <div class="max-w-8xl mx-auto">
             <router-outlet></router-outlet>
           </div>

@@ -1,0 +1,134 @@
+<div class="song-metadata-dialog">
+  <p-dialog
+    [(visible)]="visible"
+    [modal]="true"
+    [style]="{width: '50vw'}"
+    [draggable]="false"
+    [resizable]="false"
+    (visibleChange)="visibleChange.emit($event)"
+    header="Edit Song Metadata">
+    
+    <div *ngIf="loading" class="flex justify-content-center">
+      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    </div>
+
+    <form [formGroup]="metadataForm" class="p-fluid" *ngIf="!loading">
+      <!-- Song Basic Info Section -->
+      <div class="mb-4">
+        <h3>Basic Information</h3>
+        <div class="grid">
+          <div class="col-12">
+            <label for="title">Title</label>
+            <input id="title" type="text" pInputText formControlName="title">
+          </div>
+          <div class="col-6">
+            <label for="track_status">Status</label>
+            <p-dropdown id="track_status" 
+              [options]="['draft', 'pending_approval', 'released']"
+              formControlName="track_status">
+            </p-dropdown>
+          </div>
+          <div class="col-6">
+            <label for="length">Length (seconds)</label>
+            <p-inputNumber id="length" formControlName="length_seconds">
+            </p-inputNumber>
+          </div>
+          <div class="col-12">
+            <p-checkbox formControlName="is_released" [trueValue]="true" [falseValue]="false" label="Released">
+            </p-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <!-- Musical Properties Section -->
+      <div class="mb-4">
+        <h3>Musical Properties</h3>
+        <div class="grid">
+          <div class="col-6">
+            <label for="bpm">BPM</label>
+            <p-inputNumber id="bpm" formControlName="bpm">
+            </p-inputNumber>
+          </div>
+          <div class="col-6">
+            <label for="song_key">Key</label>
+            <input id="song_key" type="text" pInputText formControlName="song_key">
+          </div>
+          <div class="col-6">
+            <label for="genre">Genre</label>
+            <input id="genre" type="text" pInputText formControlName="genre">
+          </div>
+          <div class="col-6">
+            <label for="mood">Mood</label>
+            <input id="mood" type="text" pInputText formControlName="mood">
+          </div>
+          <div class="col-12">
+            <label for="tags">Tags (comma-separated)</label>
+            <input id="tags" type="text" pInputText formControlName="tags" 
+                   placeholder="Enter tags separated by commas">
+          </div>
+          <div class="col-12">
+            <label for="instruments">Instruments (comma-separated)</label>
+            <input id="instruments" type="text" pInputText formControlName="instruments" 
+                   placeholder="Enter instruments separated by commas">
+          </div>
+        </div>
+      </div>
+
+      <!-- Contributors Section -->
+      <div class="mb-4">
+        <h3>Contributors</h3>
+        <div class="grid">
+          <div class="col-12">
+            <label for="artists">Artists</label>
+            <p-multiSelect id="artists" 
+              formControlName="artists"
+              [options]="(contacts$ | async) || []"
+              optionLabel="name"
+              optionValue="id"
+              [showToggleAll]="true"
+              placeholder="Select Artists">
+            </p-multiSelect>
+          </div>
+          <div class="col-12">
+            <label for="writers">Writers</label>
+            <p-multiSelect id="writers"
+              formControlName="writers"
+              [options]="(contacts$ | async) || []"
+              optionLabel="name"
+              optionValue="id"
+              [showToggleAll]="true"
+              placeholder="Select Writers">
+            </p-multiSelect>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-between">
+        <p-button 
+          label="Delete" 
+          icon="pi pi-trash" 
+          severity="danger"
+          [disabled]="loading"
+          (onClick)="onDelete()">
+        </p-button>
+        <div>
+          <p-button 
+            label="Cancel" 
+            icon="pi pi-times" 
+            styleClass="p-button-text"
+            [disabled]="loading"
+            (onClick)="visibleChange.emit(false)">
+          </p-button>
+          <p-button 
+            label="Save" 
+            icon="pi pi-check"
+            [disabled]="loading || !metadataForm.valid"
+            (onClick)="onSave()">
+          </p-button>
+        </div>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

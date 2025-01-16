@@ -781,6 +781,21 @@ export class ApiService {
     return data;
   }
 
+  async updateContact(
+    contactId: number,
+    updates: Partial<Contact>
+  ): Promise<Contact> {
+    const { data, error } = await this.supabase
+      .from('contacts')
+      .update(updates)
+      .eq('id', contactId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
   /***********************************************
    * FILE UPLOADS
    ***********************************************/

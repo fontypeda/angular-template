@@ -22,7 +22,8 @@ import { MessageService } from 'primeng/api';
 import { debounceTime, Subject } from 'rxjs';
 import { GradientService } from '../../services/gradient.service';
 import { PageHeaderComponent } from '../../layouts/components/page-header/page-header.component';
-
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 interface Playlist {
   id: number;           // In the new schema, likely a BIGSERIAL (number)
   name: string;
@@ -97,7 +98,9 @@ interface PlaylistResponse {
     TooltipModule,
     SkeletonModule,
     ToastModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    IconFieldModule,
+    InputIconModule
   ],
   providers: [MessageService],
   templateUrl: './playlists.component.html',

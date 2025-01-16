@@ -16,7 +16,6 @@
           label="Add Contact" 
           icon="pi pi-user-plus"
           (onClick)="openNewContactDialog()"
-          styleClass="p-button-success p-button-rounded"
           [style]="{ 'min-width': '150px' }"
         ></p-button>
       </div>
@@ -41,7 +40,7 @@
   <!-- Contacts Table -->
   <p-table 
     #dt 
-    [value]="contactStore.contacts$()"
+    [value]="contactsWithSongCount()"
     [rows]="10" 
     [paginator]="true" 
     [globalFilterFields]="['name', 'email', 'phone']"
@@ -59,6 +58,7 @@
         <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
         <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
         <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
+        <th pSortableColumn="songCount">Songs <p-sortIcon field="songCount"></p-sortIcon></th>
         <th pSortableColumn="created_at">Created <p-sortIcon field="created_at"></p-sortIcon></th>
         <th>Actions</th>
       </tr>
@@ -68,23 +68,8 @@
       <tr>
         <td>
           <div class="name-cell">
+            <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" size="xlarge" shape="circle" />
             {{ contact.name }}
-            <div class="song-info" *ngIf="contact.song_contact?.length">
-              <button 
-                pButton 
-                pRipple 
-                type="button" 
-                icon="pi pi-info-circle"
-                class="p-button-rounded p-button-text p-button-info"
-                pTooltip="View linked songs"
-                (click)="showSongsDialog(contact)"
-              ></button>
-              <p-tag 
-                [value]="contact.song_contact.length + ' songs'"
-                severity="info"
-                [style]="{ 'font-size': '0.75rem' }"
-              ></p-tag>
-            </div>
           </div>
         </td>
         <td>
@@ -106,6 +91,25 @@
             {{ contact.phone }}
           </a>
           <span *ngIf="!contact.phone" class="no-data">No phone</span>
+        </td>
+        <td>
+          <div class="song-info" *ngIf="contact.song_contact?.length">
+            <button 
+              pButton 
+              pRipple 
+              type="button" 
+              icon="pi pi-info-circle"
+              class="p-button-rounded p-button-text p-button-info"
+              pTooltip="View linked songs"
+              (click)="showSongsDialog(contact)"
+            ></button>
+            <p-tag 
+              [value]="contact.song_contact.length + ' songs'"
+              severity="info"
+              [style]="{ 'font-size': '0.75rem' }"
+            ></p-tag>
+          </div>
+          <span *ngIf="!contact.song_contact?.length" class="no-data">No songs</span>
         </td>
         <td>{{ contact.created_at | date:'medium' }}</td>
         <td>
@@ -133,7 +137,7 @@
   
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="5">
+        <td colspan="6">
           <div class="empty-message">
             <i class="pi pi-inbox"></i>
             <div>No contacts found</div>

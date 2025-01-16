@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -14,6 +14,8 @@ import { RippleModule } from 'primeng/ripple';
 import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 
 // Services and Components
 import { ContactStore } from '../../stores/contact.store';
@@ -38,7 +40,9 @@ import { PageHeaderComponent } from '../../layouts/components/page-header/page-h
     CardModule,
     ConfirmDialogModule,
     ContactFormComponent,
-    PageHeaderComponent
+    PageHeaderComponent,
+    AvatarModule,
+    AvatarGroupModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './contacts.component.html',
@@ -63,7 +67,13 @@ export class ContactsComponent implements OnInit {
     phone: ['']
   });
 
-  constructor() {}
+  // Computed contacts with song count for sorting
+  contactsWithSongCount = computed(() => {
+    return this.contactStore.contacts$().map(contact => ({
+      ...contact,
+      songCount: contact.song_contact?.length || 0
+    }));
+  });
 
   ngOnInit() {
     this.loadContacts();

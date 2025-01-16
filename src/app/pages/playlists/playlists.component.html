@@ -10,17 +10,20 @@ description="Your page description">
   <div class="flex flex-col sm:flex-row justify-between items-center mb-8 bg-white p-4 rounded-md shadow-sm">
     <!-- Search Bar -->
     <div class="flex items-center w-full sm:w-auto mb-4 sm:mb-0">
-      <span class="p-input-icon-left w-full sm:w-80">
-        <i class="pi pi-search text-gray-500"></i>
-        <input
-          pInputText
+      <span class="w-full sm:w-80">
+
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input  pInputText
           type="text"
           [(ngModel)]="searchQuery"
           (input)="onSearch()"
           placeholder="Search playlists..."
           class="p-inputtext-sm w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          aria-label="Search Playlists"
-        />
+          aria-label="Search Playlists" />
+      </p-iconfield>
+
+      
       </span>
     </div>
     <!-- Create Playlist Button -->
@@ -29,7 +32,6 @@ description="Your page description">
       icon="pi pi-plus"
       label="Create Playlist"
       (click)="showCreateDialog = true"
-      class="p-button-sm p-button-raised bg-blue-500 hover:bg-blue-600 border-transparent text-white"
       aria-label="Create New Playlist"
     ></button>
   </div>
@@ -39,7 +41,7 @@ description="Your page description">
   <!-- Playlists Grid -->
   <div
     *ngIf="!loading && filteredPlaylists.length > 0"
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8"
     [@staggerAnimation]="filteredPlaylists.length"
   >
     <!-- Loop through playlists -->
@@ -48,15 +50,22 @@ description="Your page description">
       class="relative group shadow-sm rounded-lg transition-shadow duration-300 hover:shadow-xl"
       (click)="onPlaylistClick(playlist)"
       aria-label="View Playlist Details"
+
+
+      
     >
+
+
+
+         <!-- Blurred Background Image (Half Bottom) -->
+         <div
+         class="absolute inset-x-0 bottom-0 h-1/2 bg-cover bg-center filter blur-lg rounded-b-lg scale-110"
+         [style.background-image]="'url(' + playlist.randomBackground + ')'"
+         aria-hidden="true"
+       ></div>
       <!-- Aspect Ratio Wrapper -->
-      <div class="w-full h-0 pb-[100%] relative  rounded-lg">
-        <!-- Blurred Background Image (Half Bottom) -->
-        <div
-          class="absolute inset-x-0 bottom-0 h-1/2 bg-cover bg-center filter blur-lg rounded-b-lg"
-          [style.background-image]="'url(' + playlist.randomBackground + ')'"
-          aria-hidden="true"
-        ></div>
+      <div class="w-full h-0 pb-[100%] relative  rounded-lg overflow-hidden">
+   
         
         <!-- Semi-transparent Gradient Overlay -->
         <div
@@ -66,7 +75,7 @@ description="Your page description">
         
         <!-- Foreground Image -->
         <img
-          class="absolute top-0 left-0 w-full h-full object-cover z-10 rounded-lg cursor-pointer transition-transform duration-500 ease-in-out group-hover:scale-105"
+          class="absolute top-0 left-0 w-full h-full object-cover z-10 rounded-lg cursor-pointer transition-transform duration-500 ease-in-out group-hover:scale-105 "
           [src]="playlist.coverImage || playlist.randomBackground"
           alt="{{playlist.name}} Cover Image"
         />
