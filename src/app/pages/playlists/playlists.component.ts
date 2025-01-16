@@ -21,6 +21,7 @@ import { ApiService } from '../../services/api.service';
 import { MessageService } from 'primeng/api';
 import { debounceTime, Subject } from 'rxjs';
 import { GradientService } from '../../services/gradient.service';
+import { PageHeaderComponent } from '../../layouts/components/page-header/page-header.component';
 
 interface Playlist {
   id: number;           // In the new schema, likely a BIGSERIAL (number)
@@ -95,7 +96,8 @@ interface PlaylistResponse {
     InputTextModule,
     TooltipModule,
     SkeletonModule,
-    ToastModule
+    ToastModule,
+    PageHeaderComponent
   ],
   providers: [MessageService],
   templateUrl: './playlists.component.html',

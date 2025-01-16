@@ -1,266 +1,264 @@
-<div class="container">
-    <!-- Header Section -->
-    <div class="header">
-      <h1>Contacts</h1>
-      <p>Manage your music industry contacts</p>
-    </div>
-  
-    <!-- Add Contact Card -->
-    <div class="add-contact-card">
-      <div class="content">
-        <div class="info">
-          <h2>Add New Contact</h2>
-          <p>Create a new contact to collaborate with on your music projects. Keep track of important people in your network.</p>
-        </div>
-        <div class="action">
-          <p-button 
-            label="Add Contact" 
-            icon="pi pi-user-plus"
-            (onClick)="openNewContactDialog()"
-            styleClass="p-button-success p-button-rounded"
-            [style]="{ 'min-width': '150px' }"
-          ></p-button>
-        </div>
+<app-page-header
+  title="Contacts"
+  description="Manage your music industry contacts">
+</app-page-header>
+
+<div class="card">
+  <!-- Add Contact Card -->
+  <div class="add-contact-card">
+    <div class="content">
+      <div class="info">
+        <h2>Add New Contact</h2>
+        <p>Create a new contact to collaborate with on your music projects. Keep track of important people in your network.</p>
+      </div>
+      <div class="action">
+        <p-button 
+          label="Add Contact" 
+          icon="pi pi-user-plus"
+          (onClick)="openNewContactDialog()"
+          styleClass="p-button-success p-button-rounded"
+          [style]="{ 'min-width': '150px' }"
+        ></p-button>
       </div>
     </div>
+  </div>
   
-    <!-- Search Bar -->
-    <div class="search-bar">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input 
-          pInputText 
-          type="text" 
-          [value]="contactStore.searchQuery$()"
-          (input)="onSearchChange($event)"
-          placeholder="Search contacts..."
-          class="p-inputtext-sm block"
-        />
-      </span>
-    </div>
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input 
+        pInputText 
+        type="text" 
+        [value]="contactStore.searchQuery$()"
+        (input)="onSearchChange($event)"
+        placeholder="Search contacts..."
+        class="p-inputtext-sm block"
+      />
+    </span>
+  </div>
   
-    <!-- Contacts Table -->
-    <p-table 
-      #dt 
-      [value]="contactStore.contacts$()"
-      [rows]="10" 
-      [paginator]="true" 
-      [globalFilterFields]="['name', 'email', 'phone']"
-      [tableStyle]="{ 'min-width': '75rem' }"
-      [rowHover]="true"
-      dataKey="id"
-      [rowsPerPageOptions]="[10, 25, 50]"
-      [loading]="contactStore.loading$()"
-      styleClass="p-datatable-sm"
-      [scrollable]="true"
-      responsiveLayout="scroll"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-          <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
-          <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
-          <th pSortableColumn="created_at">Created <p-sortIcon field="created_at"></p-sortIcon></th>
-          <th>Actions</th>
-        </tr>
-      </ng-template>
+  <!-- Contacts Table -->
+  <p-table 
+    #dt 
+    [value]="contactStore.contacts$()"
+    [rows]="10" 
+    [paginator]="true" 
+    [globalFilterFields]="['name', 'email', 'phone']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="contactStore.loading$()"
+    styleClass="p-datatable-sm"
+    [scrollable]="true"
+    responsiveLayout="scroll"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+        <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
+        <th pSortableColumn="created_at">Created <p-sortIcon field="created_at"></p-sortIcon></th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
   
-      <ng-template pTemplate="body" let-contact>
-        <tr>
-          <td>
-            <div class="name-cell">
-              {{ contact.name }}
-              <div class="song-info" *ngIf="contact.song_contact?.length">
-                <button 
-                  pButton 
-                  pRipple 
-                  type="button" 
-                  icon="pi pi-info-circle"
-                  class="p-button-rounded p-button-text p-button-info"
-                  pTooltip="View linked songs"
-                  (click)="showSongsDialog(contact)"
-                ></button>
+    <ng-template pTemplate="body" let-contact>
+      <tr>
+        <td>
+          <div class="name-cell">
+            {{ contact.name }}
+            <div class="song-info" *ngIf="contact.song_contact?.length">
+              <button 
+                pButton 
+                pRipple 
+                type="button" 
+                icon="pi pi-info-circle"
+                class="p-button-rounded p-button-text p-button-info"
+                pTooltip="View linked songs"
+                (click)="showSongsDialog(contact)"
+              ></button>
+              <p-tag 
+                [value]="contact.song_contact.length + ' songs'"
+                severity="info"
+                [style]="{ 'font-size': '0.75rem' }"
+              ></p-tag>
+            </div>
+          </div>
+        </td>
+        <td>
+          <a 
+            *ngIf="contact.email" 
+            [href]="'mailto:' + contact.email" 
+            class="email-link"
+          >
+            {{ contact.email }}
+          </a>
+          <span *ngIf="!contact.email" class="no-data">No email</span>
+        </td>
+        <td>
+          <a 
+            *ngIf="contact.phone" 
+            [href]="'tel:' + contact.phone" 
+            class="phone-link"
+          >
+            {{ contact.phone }}
+          </a>
+          <span *ngIf="!contact.phone" class="no-data">No phone</span>
+        </td>
+        <td>{{ contact.created_at | date:'medium' }}</td>
+        <td>
+          <div class="actions">
+            <button 
+              pButton 
+              pRipple 
+              icon="pi pi-pencil" 
+              class="p-button-rounded p-button-text"
+              pTooltip="Edit contact"
+              (click)="editContact(contact)"
+            ></button>
+            <button 
+              pButton 
+              pRipple 
+              icon="pi pi-trash" 
+              class="p-button-rounded p-button-text p-button-danger"
+              pTooltip="Delete contact"
+              (click)="confirmDelete(contact)"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">
+          <div class="empty-message">
+            <i class="pi pi-inbox"></i>
+            <div>No contacts found</div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  
+  <!-- Songs Dialog -->
+  <p-dialog 
+    [(visible)]="songsDialogVisible" 
+    [header]="contactStore.selectedContact$()?.name + '\'s Songs'"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [breakpoints]="{'960px': '75vw', '641px': '90vw'}"
+  >
+    <div class="songs-dialog">
+      <div *ngIf="contactStore.selectedContact$()?.song_contact?.length" class="songs-grid">
+        <div 
+          *ngFor="let songContact of contactStore.selectedContact$()?.song_contact"
+          class="song-card"
+        >
+          <div class="song-content">
+            <img 
+              [src]="songContact.song.cover_image_url || 'assets/default-album.png'" 
+              [alt]="songContact.song.title"
+            />
+            <div class="song-info">
+              <h4>{{ songContact.song.title }}</h4>
+              <div class="tags">
+                <p-tag [value]="songContact.role_in_song" severity="info"></p-tag>
                 <p-tag 
-                  [value]="contact.song_contact.length + ' songs'"
-                  severity="info"
-                  [style]="{ 'font-size': '0.75rem' }"
+                  *ngIf="songContact.split_percentage"
+                  [value]="songContact.split_percentage + '%'"
+                  severity="success"
+                ></p-tag>
+                <p-tag 
+                  [value]="songContact.song.track_status"
+                  [severity]="getSongSeverity(songContact.song.track_status)"
                 ></p-tag>
               </div>
             </div>
-          </td>
-          <td>
-            <a 
-              *ngIf="contact.email" 
-              [href]="'mailto:' + contact.email" 
-              class="email-link"
-            >
-              {{ contact.email }}
-            </a>
-            <span *ngIf="!contact.email" class="no-data">No email</span>
-          </td>
-          <td>
-            <a 
-              *ngIf="contact.phone" 
-              [href]="'tel:' + contact.phone" 
-              class="phone-link"
-            >
-              {{ contact.phone }}
-            </a>
-            <span *ngIf="!contact.phone" class="no-data">No phone</span>
-          </td>
-          <td>{{ contact.created_at | date:'medium' }}</td>
-          <td>
-            <div class="actions">
-              <button 
-                pButton 
-                pRipple 
-                icon="pi pi-pencil" 
-                class="p-button-rounded p-button-text"
-                pTooltip="Edit contact"
-                (click)="editContact(contact)"
-              ></button>
-              <button 
-                pButton 
-                pRipple 
-                icon="pi pi-trash" 
-                class="p-button-rounded p-button-text p-button-danger"
-                pTooltip="Delete contact"
-                (click)="confirmDelete(contact)"
-              ></button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-  
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5">
-            <div class="empty-message">
-              <i class="pi pi-inbox"></i>
-              <div>No contacts found</div>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  
-    <!-- Songs Dialog -->
-    <p-dialog 
-      [(visible)]="songsDialogVisible" 
-      [header]="contactStore.selectedContact$()?.name + '\'s Songs'"
-      [modal]="true"
-      [style]="{ width: '50vw' }"
-      [breakpoints]="{'960px': '75vw', '641px': '90vw'}"
-    >
-      <div class="songs-dialog">
-        <div *ngIf="contactStore.selectedContact$()?.song_contact?.length" class="songs-grid">
-          <div 
-            *ngFor="let songContact of contactStore.selectedContact$()?.song_contact"
-            class="song-card"
-          >
-            <div class="song-content">
-              <img 
-                [src]="songContact.song.cover_image_url || 'assets/default-album.png'" 
-                [alt]="songContact.song.title"
-              />
-              <div class="song-info">
-                <h4>{{ songContact.song.title }}</h4>
-                <div class="tags">
-                  <p-tag [value]="songContact.role_in_song" severity="info"></p-tag>
-                  <p-tag 
-                    *ngIf="songContact.split_percentage"
-                    [value]="songContact.split_percentage + '%'"
-                    severity="success"
-                  ></p-tag>
-                  <p-tag 
-                    [value]="songContact.song.track_status"
-                    [severity]="getSongSeverity(songContact.song.track_status)"
-                  ></p-tag>
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
-        <div 
-          *ngIf="!contactStore.selectedContact$()?.song_contact?.length"
-          class="no-songs"
-        >
-          No songs linked to this contact
         </div>
       </div>
-    </p-dialog>
+      <div 
+        *ngIf="!contactStore.selectedContact$()?.song_contact?.length"
+        class="no-songs"
+      >
+        No songs linked to this contact
+      </div>
+    </div>
+  </p-dialog>
   
-    <!-- Contact Dialog -->
-    <p-dialog 
-      [(visible)]="contactDialog" 
-      [header]="editingContact ? 'Edit Contact' : 'New Contact'"
-      [modal]="true" 
-      styleClass="p-fluid"
-    >
-      <form [formGroup]="contactForm" (ngSubmit)="saveContact()">
-        <div class="form-grid">
-          <div class="field">
-            <label for="name">Name*</label>
-            <input 
-              pInputText 
-              id="name" 
-              formControlName="name"
-              [ngClass]="{'ng-invalid ng-dirty': submitted && contactForm.get('name')?.errors}"
-            />
-            <small 
-              class="error" 
-              *ngIf="submitted && contactForm.get('name')?.errors?.['required']"
-            >
-              Name is required.
-            </small>
-          </div>
-  
-          <div class="field">
-            <label for="email">Email</label>
-            <input 
-              pInputText 
-              id="email" 
-              formControlName="email"
-              [ngClass]="{'ng-invalid ng-dirty': submitted && contactForm.get('email')?.errors}"
-            />
-            <small 
-              class="error" 
-              *ngIf="submitted && contactForm.get('email')?.errors?.['email']"
-            >
-              Invalid email address.
-            </small>
-          </div>
-  
-          <div class="field">
-            <label for="phone">Phone</label>
-            <input 
-              pInputText 
-              id="phone" 
-              formControlName="phone"
-            />
-          </div>
+  <!-- Contact Dialog -->
+  <p-dialog 
+    [(visible)]="contactDialog" 
+    [header]="editingContact ? 'Edit Contact' : 'New Contact'"
+    [modal]="true" 
+    styleClass="p-fluid"
+  >
+    <form [formGroup]="contactForm" (ngSubmit)="saveContact()">
+      <div class="form-grid">
+        <div class="field">
+          <label for="name">Name*</label>
+          <input 
+            pInputText 
+            id="name" 
+            formControlName="name"
+            [ngClass]="{'ng-invalid ng-dirty': submitted && contactForm.get('name')?.errors}"
+          />
+          <small 
+            class="error" 
+            *ngIf="submitted && contactForm.get('name')?.errors?.['required']"
+          >
+            Name is required.
+          </small>
         </div>
-      </form>
   
-      <ng-template pTemplate="footer">
-        <button 
-          pButton 
-          label="Cancel" 
-          icon="pi pi-times" 
-          class="p-button-text" 
-          (click)="hideDialog()"
-        ></button>
-        <button 
-          pButton 
-          label="Save" 
-          icon="pi pi-check" 
-          class="p-button-text" 
-          (click)="saveContact()"
-        ></button>
-      </ng-template>
-    </p-dialog>
+        <div class="field">
+          <label for="email">Email</label>
+          <input 
+            pInputText 
+            id="email" 
+            formControlName="email"
+            [ngClass]="{'ng-invalid ng-dirty': submitted && contactForm.get('email')?.errors}"
+          />
+          <small 
+            class="error" 
+            *ngIf="submitted && contactForm.get('email')?.errors?.['email']"
+          >
+            Invalid email address.
+          </small>
+        </div>
   
-    <p-confirmDialog></p-confirmDialog>
-    <p-toast></p-toast>
-  </div>
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input 
+            pInputText 
+            id="phone" 
+            formControlName="phone"
+          />
+        </div>
+      </div>
+    </form>
   
+    <ng-template pTemplate="footer">
+      <button 
+        pButton 
+        label="Cancel" 
+        icon="pi pi-times" 
+        class="p-button-text" 
+        (click)="hideDialog()"
+      ></button>
+      <button 
+        pButton 
+        label="Save" 
+        icon="pi pi-check" 
+        class="p-button-text" 
+        (click)="saveContact()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+  
+  <p-confirmDialog></p-confirmDialog>
+  <p-toast></p-toast>
+</div>

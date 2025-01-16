@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { PageHeaderComponent } from '../../layouts/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +15,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
     HeaderComponent,
     FooterComponent,
     SidebarComponent,
+    PageHeaderComponent
   ],
   template: `
     <div class="min-h-screen flex flex-col bg-surface-50">
@@ -29,45 +31,20 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
           <app-sidebar></app-sidebar>
         </aside>
 
-        <!-- Main Content Area -->
-        <main class="flex-1 p-4">
-          <router-outlet></router-outlet>
+        <!-- Main content -->
+        <main class="flex-1 p-4 sm:p-16 lg:p-24 xl:p-32">
+          <div class="max-w-8xl mx-auto">
+            <router-outlet></router-outlet>
+          </div>
         </main>
       </div>
 
-      <!-- Footer (fixed at bottom) -->
-      <footer class="sticky bottom-0 z-50 bg-surface-0 shadow-sm h-[50px]">
+      <!-- Footer -->
+      <footer class="bg-surface-0 shadow-sm">
         <app-footer></app-footer>
       </footer>
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
-
-    :host ::ng-deep {
-      /* Ensure header has consistent height */
-      app-header {
-        display: block;
-        height: 64px;
-      }
-
-      /* Make sidebar fill available height */
-      app-sidebar {
-        display: block;
-        height: calc(100vh - 114px); /* viewport height minus header and footer */
-        position: relative;
-      }
-
-      /* Footer styles */
-      app-footer {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-      }
-    }
-  `]
+  styles: []
 })
 export class DashboardComponent {}

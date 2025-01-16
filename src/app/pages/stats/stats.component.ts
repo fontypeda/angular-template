@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { CardModule } from 'primeng/card';
-import { PageLayoutComponent } from '../../components/shared/page-layout/page-layout.component';
+import { PageHeaderComponent } from '../../layouts/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-stats',
@@ -11,12 +11,13 @@ import { PageLayoutComponent } from '../../components/shared/page-layout/page-la
     CommonModule,
     ChartModule,
     CardModule,
-    PageLayoutComponent
+    PageHeaderComponent
   ],
   template: `
-    <app-page-layout
-      title="Analytics"
-      description="Track your music library statistics">
+  <app-page-header
+  title="Statistics"
+  description="View insights about your music collection">
+</app-page-header>
       
       <!-- Stats Grid -->
       <div class="grid">
@@ -74,7 +75,7 @@ import { PageLayoutComponent } from '../../components/shared/page-layout/page-la
           </p-card>
         </div>
       </div>
-    </app-page-layout>
+ 
   `
 })
 export class StatsComponent implements OnInit {

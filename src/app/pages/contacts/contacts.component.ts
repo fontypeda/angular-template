@@ -18,6 +18,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 // Services and Components
 import { ContactStore } from '../../stores/contact.store';
 import { ContactFormComponent } from '../../components/contact-form/contact-form.component';
+import { PageHeaderComponent } from '../../layouts/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-contacts',
@@ -36,7 +37,8 @@ import { ContactFormComponent } from '../../components/contact-form/contact-form
     RippleModule,
     CardModule,
     ConfirmDialogModule,
-    ContactFormComponent
+    ContactFormComponent,
+    PageHeaderComponent
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './contacts.component.html',

@@ -17,6 +17,7 @@ import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PageHeaderComponent } from '../../layouts/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-search',
@@ -36,7 +37,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ChipModule,
     ToastModule,
     TagModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    PageHeaderComponent
   ],
   providers: [MessageService, ConfirmationService]
 })

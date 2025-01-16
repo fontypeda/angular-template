@@ -19,6 +19,7 @@ import { DropdownModule } from 'primeng/dropdown';
 // Services and Components
 import { ApiService } from '../../services/api.service';
 import { ContactFormComponent, ContactFormData } from '../../components/contact-form/contact-form.component';
+import { PageHeaderComponent } from '../../layouts/components/page-header/page-header.component';
 
 interface Contact {
   id: number;
@@ -78,7 +79,8 @@ interface SelectOption {
     ToastModule,
     DialogModule,
     DropdownModule,
-    ContactFormComponent
+    ContactFormComponent,
+    PageHeaderComponent
   ],
   providers: [MessageService],
   templateUrl: './upload.component.html',
